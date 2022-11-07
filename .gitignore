@@ -1,6 +1,6 @@
 *.o
 *.a
+libft/obj/
 libft/*.o
 libft/*.a
 obj/
-ft_ping

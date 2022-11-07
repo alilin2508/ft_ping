@@ -3,16 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strncmp.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: thhusser <thhusser@student.42.fr>          +#+  +:+       +#+        */
+/*   By: alilin <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/11/04 01:13:57 by thhusser          #+#    #+#             */
-/*   Updated: 2020/11/04 01:13:57 by thhusser         ###   ########.fr       */
+/*   Created: 2019/10/07 18:31:44 by alilin            #+#    #+#             */
+/*   Updated: 2019/10/24 14:07:57 by alilin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-int	ft_strncmp(char const *s1, char const *s2, unsigned int n)
+#include <stdlib.h>
+
+int	ft_strncmp(const char *s1, const char *s2, size_t n)
 {
-	unsigned int	i;
+	size_t i;
 
 	i = 0;
 	if (n == 0)

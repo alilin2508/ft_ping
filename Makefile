@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: thhusser <thhusser@student.42.fr>          +#+  +:+       +#+         #
+#    By: alilin <alilin@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/11/07 12:30:25 by thhusser          #+#    #+#              #
-#    Updated: 2022/11/07 12:39:51 by thhusser         ###   ########.fr        #
+#    Updated: 2022/11/07 14:35:25 by alilin           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -26,7 +26,6 @@ FLAGS   = -Wall -Wextra -Werror -g
 DIR_INC = -I ./includes/
 
 SRCS 	:= 	ft_getopt.c \
-
 			# ft_ping.c
 
 DIR_SRCS 	= ./srcs
@@ -46,11 +45,11 @@ all: $(NAME)
 
 $(DIR_OBJ)/%.o:	$(DIR_SRCS)/%.c
 	@mkdir -p $(dir $@)
-	@${CC} ${FLAGS} ${DIR_INC} -o $@ -c $< -MMD
+	@$(CC) $(FLAGS) $(DIR_INC) -o $@ -c $< -MMD
 
 $(NAME): $(OBJS)
 	make -C $(PATH_LIBFT)
-	@$(CC) $(FLAGS) ${DIR_INC} $(OBJS) -o $(NAME) -L $(PATH_LIBFT) -lft
+	@$(CC) $(FLAGS) $(DIR_INC) $(OBJS) -o $(NAME) -L $(PATH_LIBFT) -lft
 	@printf "$(_GREEN)Generating $(NAME) $(_NC)\n"
 
 clean:

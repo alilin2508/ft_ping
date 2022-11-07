@@ -3,42 +3,33 @@
 /*                                                        :::      ::::::::   */
 /*   ft_substr.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: thhusser <thhusser@student.42.fr>          +#+  +:+       +#+        */
+/*   By: alilin <alilin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/11/04 23:30:06 by thhusser          #+#    #+#             */
-/*   Updated: 2020/11/04 23:30:06 by thhusser         ###   ########.fr       */
+/*   Created: 2019/10/10 13:54:29 by alilin            #+#    #+#             */
+/*   Updated: 2019/10/28 10:14:00 by alilin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <stdlib.h>
 #include "libft.h"
-
-static char	*strncpy(char *dest, const char *src, size_t n)
-{
-	size_t	i;
-
-	i = 0;
-	while (src[i] && i < n)
-	{
-		dest[i] = src[i];
-		i++;
-	}
-	while (i < n)
-		dest[i++] = 0;
-	return (dest);
-}
 
 char	*ft_substr(char const *s, unsigned int start, size_t len)
 {
-	char	*dest;
+	char	*str;
+	size_t	i;
 
+	i = 0;
 	if (!s)
 		return (NULL);
 	if (start >= ft_strlen(s))
-		return ((char *)ft_calloc(1, sizeof(char)));
-	dest = (char *)malloc(sizeof(char) * len + 1);
-	if (!dest)
-		return (NULL);
-	dest = strncpy(dest, s + start, len);
-	dest[len] = 0;
-	return (dest);
+		return (str = (char *)ft_calloc(1, sizeof(char *)));
+	if (!(str = (char *)malloc(sizeof(char) * len + 1)))
+		return (0);
+	while (i < len && s[start + i])
+	{
+		str[i] = s[start + i];
+		i++;
+	}
+	str[i] = '\0';
+	return (str);
 }

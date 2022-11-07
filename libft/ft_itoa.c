@@ -3,61 +3,57 @@
 /*                                                        :::      ::::::::   */
 /*   ft_itoa.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: thhusser <thhusser@student.42.fr>          +#+  +:+       +#+        */
+/*   By: alilin <alilin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/11/04 01:12:00 by thhusser          #+#    #+#             */
-/*   Updated: 2020/11/04 01:12:00 by thhusser         ###   ########.fr       */
+/*   Created: 2019/10/10 15:25:10 by alilin            #+#    #+#             */
+/*   Updated: 2019/10/28 11:35:41 by alilin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-static int	ft_size(int n)
+static int		ft_size(long nb)
 {
-	int	i;
-	int	neg;
+	int		size;
 
-	i = 0;
-	neg = 0;
-	if (n < 0)
+	size = 1;
+	if (nb < 0)
 	{
-		n *= -1;
-		neg += 1;
+		nb = -nb;
+		size += 1;
 	}
-	if (n == 0)
-		return (1);
-	while (n != 0)
+	while (nb >= 10)
 	{
-		n /= 10;
-		i++;
+		size++;
+		nb = nb / 10;
 	}
-	return (i + neg);
+	return (size);
 }
 
-char	*ft_itoa(int n)
+char			*ft_itoa(int n)
 {
-	char		*str;
-	int			i;
-	int			size;
-	long int	nb;
+	char			*str;
+	int				i;
+	int				size;
+	unsigned int	nb;
 
-	nb = n;
-	size = ft_size(nb);
-	i = size;
-	str = (char *)malloc(sizeof(char) * (size + 1));
-	if (!str)
+	size = ft_size(n);
+	if (!(str = (char *)malloc(sizeof(char) * (size + 1))))
 		return (NULL);
 	if (n < 0)
-		str[0] = '-';
-	if (nb < 0)
-		nb *= -1;
-	while (nb != 0)
+		nb = -n;
+	else
+		nb = n;
+	i = size - 1;
+	while (nb >= 10)
 	{
-		str[--i] = nb % 10 + 48;
+		str[i] = nb % 10 + 48;
 		nb /= 10;
+		i--;
 	}
-	if (n == 0)
-		str[0] = '0';
-	str[size] = 0;
+	if (n < 0)
+		str[0] = '-';
+	str[i] = nb % 10 + 48;
+	str[size] = '\0';
 	return (str);
 }

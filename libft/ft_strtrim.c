@@ -3,54 +3,81 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strtrim.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: thhusser <thhusser@student.42.fr>          +#+  +:+       +#+        */
+/*   By: alilin <alilin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/11/04 01:14:12 by thhusser          #+#    #+#             */
-/*   Updated: 2020/11/04 01:14:12 by thhusser         ###   ########.fr       */
+/*   Created: 2019/10/28 15:41:53 by alilin            #+#    #+#             */
+/*   Updated: 2019/10/28 15:41:59 by alilin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
+#include <stdlib.h>
 
-static int	charset(char const *set, char c)
+static int			ft_start_nbset(char const *s1, char const *set)
 {
-	int	i;
+	int		i;
+	int		j;
+	int		nbset;
 
+	nbset = 0;
 	i = 0;
-	while (set[i])
+	while (s1[i] && set[j] != '\0')
 	{
-		if (set[i] == c)
-			return (1);
+		j = 0;
+		while (s1[i] != set[j] && set[j])
+			j++;
+		if (s1[i] == set[j])
+			nbset++;
 		i++;
 	}
-	return (0);
+	return (nbset);
 }
 
-static char	*strnew(size_t size)
+static int			ft_end_nbset(char const *s1, char const *set)
 {
-	char	*new;
+	int		i;
+	int		j;
+	int		nbset;
 
-	new = malloc(sizeof(char) * size + 1);
-	if (!new)
-		return (NULL);
-	ft_bzero(new, size + 1);
-	return (new);
+	i = ft_strlen(s1) - 1;
+	j = 0;
+	nbset = 0;
+	while (i > 0 && set[j])
+	{
+		j = 0;
+		while (s1[i] != set[j] && set[j])
+			j++;
+		if (s1[i] == set[j])
+			nbset++;
+		i--;
+	}
+	return (nbset);
 }
 
-char	*ft_strtrim(char const *s1, char const *set)
+char				*ft_strtrim(char const *s1, char const *set)
 {
-	int	min;
-	int	max;
+	int		size;
+	int		start;
+	int		end;
+	char	*str;
+	int		i;
 
 	if (!s1)
 		return (NULL);
-	min = 0;
-	while (s1[min] && charset(set, s1[min]) == 1)
-		min++;
-	max = ft_strlen(s1) - 1;
-	while (min <= max && charset(set, s1[max]) == 1)
-		max--;
-	if (min == max)
-		return (strnew(0));
-	return (ft_substr(s1, min, (max - min + 1)));
+	start = ft_start_nbset(s1, set);
+	if (ft_strlen(s1) == (size_t)start)
+		return (str = (char *)ft_calloc(1, sizeof(char)));
+	end = ft_end_nbset(s1, set);
+	size = ft_strlen(s1) - (start + end);
+	if (!(str = (char *)malloc((sizeof(char) * (size + 1)))))
+		return (0);
+	i = 0;
+	while ((unsigned long)start < (ft_strlen(s1) - end))
+	{
+		str[i] = s1[start];
+		i++;
+		start++;
+	}
+	str[i] = '\0';
+	return (str);
 }
