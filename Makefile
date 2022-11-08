@@ -6,7 +6,7 @@
 #    By: alilin <alilin@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/11/07 12:30:25 by thhusser          #+#    #+#              #
-#    Updated: 2022/11/07 16:54:00 by alilin           ###   ########.fr        #
+#    Updated: 2022/11/08 14:42:13 by alilin           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -26,7 +26,7 @@ FLAGS   = -Wall -Wextra -Werror -g
 DIR_INC = -I ./includes/
 
 SRCS 	:= 	ft_getopt.c \
-			ft_ping.c
+			ft_ping.c \
 
 DIR_SRCS 	= ./srcs
 

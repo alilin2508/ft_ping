@@ -6,7 +6,7 @@
 #    By: alilin <alilin@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/11/07 13:56:40 by alilin            #+#    #+#              #
-#    Updated: 2022/11/07 14:52:18 by alilin           ###   ########.fr        #
+#    Updated: 2022/11/08 14:40:51 by alilin           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -31,6 +31,8 @@ SRCS 	:=	ft_bzero.c \
 			ft_strdup.c \
 			ft_isascii.c \
 			ft_strlen.c \
+			ft_tablen.c \
+			ft_setopt.c \
 			ft_strlcpy.c \
 			ft_strncmp.c \
 			ft_memmove.c \

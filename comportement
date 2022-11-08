@@ -1,0 +1,55 @@
+ping
+ping: usage error: Destination address required
+
+ping -
+ping: -: Name or service not known
+
+ping -h
+
+Usage
+  ping [options] <destination>
+
+Options:
+  <destination>      dns name or ip address
+  -a                 use audible ping
+
+ping --h
+ping: invalid option -- '-'
+
+Usage
+  ping [options] <destination>
+
+ping -verbose
+ping: invalid option -- 'e'
+
+Usage
+  ping [options] <destination>
+
+
+ping -v-he
+ping: invalid option -- '-'
+
+Usage
+  ping [options] <destination>
+
+ping -vhe
+
+Usage
+  ping [options] <destination>
+
+ping -helpe
+
+Usage
+  ping [options] <destination>
+
+ping -ehelp
+ping: invalid option -- 'e'
+
+Usage
+  ping [options] <destination>
+
+ping -e
+ping: invalid option -- 'e'
+
+Usage
+  ping [options] <destination>

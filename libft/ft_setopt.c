@@ -1,30 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_ping.c                                          :+:      :+:    :+:   */
+/*   ft_setopt.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: alilin <alilin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/11/07 12:54:59 by alilin            #+#    #+#             */
-/*   Updated: 2022/11/08 14:41:36 by alilin           ###   ########.fr       */
+/*   Created: 2022/11/08 14:10:52 by alilin            #+#    #+#             */
+/*   Updated: 2022/11/08 14:43:43 by alilin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_ping.h"
+#include "libft.h"
 
-int main(int ac, char  **av)
+char **ft_setopt(int nboptions, ...)
 {
-    if (ac < 2) {
-        fprintf(stderr, "ping: usage error: Destination address required\n");
+    int i;
+    va_list opt;
+    
+    char **options;
+    if (!(options = (char **)malloc(sizeof(char *) * (nboptions + 1))))
         exit(EXIT_FAILURE);
+    va_start(opt, nboptions);
+    for(i = 0; i < nboptions; i++)
+    {
+        options[i] = ft_strdup(va_arg(opt, char *));
     }
-    char *options[] = {
-        "help",
-        "h",
-        "v",
-        NULL
-    };
-    ft_getopt(ac, av, options);
-    (void)av;
-    return (0);
+    options[i] = NULL;
+    va_end(opt);
+    return(options);
 }
