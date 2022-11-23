@@ -6,7 +6,7 @@
 /*   By: alilin <alilin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/07 12:51:17 by alilin            #+#    #+#             */
-/*   Updated: 2022/11/08 14:42:18 by alilin           ###   ########.fr       */
+/*   Updated: 2022/11/22 14:53:15 by alilin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,14 @@
 # include <stdlib.h>
 # include <unistd.h>
 # include <stdarg.h>
+# include <stdbool.h>
 
-char *ft_getopt(int ac, char **av, char **options);
+typedef struct s_options
+{
+    bool       h;
+    bool       v;
+}              t_options;
+
+char *ft_getopt(char **av, char **options);
 
 #endif

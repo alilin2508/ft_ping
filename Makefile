@@ -6,7 +6,7 @@
 #    By: alilin <alilin@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/11/07 12:30:25 by thhusser          #+#    #+#              #
-#    Updated: 2022/11/08 14:42:13 by alilin           ###   ########.fr        #
+#    Updated: 2022/11/22 14:53:31 by alilin           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -25,8 +25,8 @@ CC      = clang
 FLAGS   = -Wall -Wextra -Werror -g
 DIR_INC = -I ./includes/
 
-SRCS 	:= 	ft_getopt.c \
-			ft_ping.c \
+SRCS 	:= 	ft_ping.c \
+			ft_getopt.c \
 
 DIR_SRCS 	= ./srcs
 
