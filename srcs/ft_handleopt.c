@@ -6,7 +6,7 @@
 /*   By: alilin <alilin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/24 14:52:12 by alilin            #+#    #+#             */
-/*   Updated: 2022/11/24 16:06:01 by alilin           ###   ########.fr       */
+/*   Updated: 2022/11/28 14:07:45 by alilin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ void print_usage(void) {
     printf("  ping [options] <destination>\n");
     printf("\nOptions:\n");
     printf("  %-19s%s\n", "<destination>", "dns name or ip address");
+    printf("  %-19s%s\n", "-h", "print help and exit");
     printf("  %-19s%s\n", "-v", "verbose output");
 }
 
