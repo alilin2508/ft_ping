@@ -6,7 +6,7 @@
 #    By: alilin <alilin@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/11/07 12:30:25 by thhusser          #+#    #+#              #
-#    Updated: 2022/11/22 14:53:31 by alilin           ###   ########.fr        #
+#    Updated: 2022/11/24 14:52:31 by alilin           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -27,6 +27,7 @@ DIR_INC = -I ./includes/
 
 SRCS 	:= 	ft_ping.c \
 			ft_getopt.c \
+			ft_handleopt.c \
 
 DIR_SRCS 	= ./srcs
 

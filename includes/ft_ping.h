@@ -6,7 +6,7 @@
 /*   By: alilin <alilin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/07 12:51:17 by alilin            #+#    #+#             */
-/*   Updated: 2022/11/22 14:53:15 by alilin           ###   ########.fr       */
+/*   Updated: 2022/11/24 15:56:52 by alilin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,10 +24,12 @@
 
 typedef struct s_options
 {
-    bool       h;
-    bool       v;
+    bool    h;
+    bool    v;
+    bool    error;
 }              t_options;
 
 char *ft_getopt(char **av, char **options);
+void ft_handleopt(t_options *options,char *option);
 
 #endif

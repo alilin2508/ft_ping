@@ -6,7 +6,7 @@
 /*   By: alilin <alilin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/07 12:55:07 by alilin            #+#    #+#             */
-/*   Updated: 2022/11/22 15:20:59 by alilin           ###   ########.fr       */
+/*   Updated: 2022/11/24 14:48:09 by alilin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,6 @@ char *ft_getopt(char **av, char **options) {
                     {
                         if (option != NULL)
                         {
-                            printf("caca");
                             option = ft_strjoin(option, options[k]);
                         }
                         else
@@ -54,7 +53,6 @@ char *ft_getopt(char **av, char **options) {
                 }
                 if (flag == false)
                 {
-                    printf("%s\n", option);
                     if (option != NULL)
                         free(option);
                     option = ft_substr(av[i], j, 1);
