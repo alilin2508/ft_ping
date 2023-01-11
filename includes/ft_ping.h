@@ -6,7 +6,7 @@
 /*   By: alilin <alilin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/07 12:51:17 by alilin            #+#    #+#             */
-/*   Updated: 2022/11/24 15:56:52 by alilin           ###   ########.fr       */
+/*   Updated: 2023/01/11 19:27:30 by alilin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,17 +19,51 @@
 # include <stdio.h>
 # include <stdlib.h>
 # include <unistd.h>
+# include <time.h>
+# include <fcntl.h>
+# include <signal.h>
 # include <stdarg.h>
 # include <stdbool.h>
+# include <netinet/in.h>
+# include <arpa/inet.h>
+# include <netdb.h>
+# include <netinet/ip_icmp.h>
 
-typedef struct s_options
+typedef struct  options
 {
-    bool    h;
-    bool    v;
-    bool    error;
-}              t_options;
+    bool            h;
+    bool            v;
+    bool            error;
+}               t_options;
 
+typedef struct  ping_pkt
+{
+    struct icmp     hdr; // !! struct icmphdr under linux and icmp under mac
+    char            msg[sizeof(struct icmp)];
+}               t_ping_pkt;
+
+typedef struct  ping_env
+{
+    int             ttl; //send ttl settings: 255 on linux
+    unsigned int    timeout;
+    
+    int             sockfd;
+    pid_t           pid;
+    int             msg_count;
+    int             addr_len;
+    int             flag;
+    int             i;
+    bool            ping_loop;
+    
+    struct addrinfo hints;
+    struct addrinfo *res;
+
+    int             received_msg_count;
+    int             ret_ttl;    //returned ttl by the pinged system wich allows us to identify the operating system
+}               t_ping_env;
+
+void print_error(char *error);
 char *ft_getopt(char **av, char **options);
-void ft_handleopt(t_options *options,char *option);
+void ft_handleopt(t_options *options, char *option);
 
 #endif

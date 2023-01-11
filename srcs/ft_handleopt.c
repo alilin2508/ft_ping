@@ -6,14 +6,14 @@
 /*   By: alilin <alilin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/24 14:52:12 by alilin            #+#    #+#             */
-/*   Updated: 2022/11/28 14:07:45 by alilin           ###   ########.fr       */
+/*   Updated: 2023/01/11 18:10:12 by alilin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ping.h"
 
-void print_error(char *error) {
-    printf("ping: invalid option -- '%s'\n", error);
+void print_option_error(char *error) {
+    fprintf(stderr, "ping: invalid option -- '%s'\n", error);
 }
 
 void print_usage(void) {
@@ -35,7 +35,7 @@ void ft_handleopt(t_options *options, char *option) {
     init_opt(options);
     for (size_t i = 0; i < ft_strlen(option); i++)
     {
-        switch (option[i])
+        switch (option[i]) // init the options that we found earlier
         {
             case 'h':
                 options->h = true;
@@ -49,10 +49,17 @@ void ft_handleopt(t_options *options, char *option) {
         }
     }
     if (options->h == true)
+    {
         print_usage();
+        free(option);
+        exit(EXIT_FAILURE);
+    }
     else if (options->error == true)
     {
-        print_error(option);
+        print_option_error(option);
         print_usage();
+        free(option);
+        exit(EXIT_FAILURE);
     }
+    return;
 }
