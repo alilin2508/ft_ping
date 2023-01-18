@@ -6,7 +6,7 @@
 #    By: alilin <alilin@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/11/07 12:30:25 by thhusser          #+#    #+#              #
-#    Updated: 2023/01/12 17:13:44 by alilin           ###   ########.fr        #
+#    Updated: 2023/01/18 20:08:32 by alilin           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -29,7 +29,6 @@ SRCS 	:= 	ft_ping.c \
 			ft_getopt.c \
 			ft_handleopt.c \
 			utils.c \
-			ft_send_and_receive.c \
 			ft_display.c \
 
 DIR_SRCS 	= ./srcs

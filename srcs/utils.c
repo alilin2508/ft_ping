@@ -6,14 +6,14 @@
 /*   By: alilin <alilin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/11 17:58:30 by alilin            #+#    #+#             */
-/*   Updated: 2023/01/16 15:48:34 by alilin           ###   ########.fr       */
+/*   Updated: 2023/01/18 21:26:32 by alilin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ping.h"
 
 void print_error(char *error) {
-    fprintf(stderr, "ping: %s\n", error);
+    fprintf(stderr, "ping: %s", error);
     exit(EXIT_FAILURE);
 }
 

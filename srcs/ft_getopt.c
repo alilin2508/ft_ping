@@ -6,7 +6,7 @@
 /*   By: alilin <alilin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/07 12:55:07 by alilin            #+#    #+#             */
-/*   Updated: 2023/01/06 11:59:33 by alilin           ###   ########.fr       */
+/*   Updated: 2023/01/18 20:22:00 by alilin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,8 +61,8 @@ char *ft_getopt(char **av, char **options) {
                 flag = false;
                 j++;
             }
+            i++;
         }
-        i++;
     }
     return (option);
 }

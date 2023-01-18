@@ -6,7 +6,7 @@
 /*   By: alilin <alilin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/24 14:52:12 by alilin            #+#    #+#             */
-/*   Updated: 2023/01/11 18:10:12 by alilin           ###   ########.fr       */
+/*   Updated: 2023/01/18 20:35:26 by alilin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,19 +33,23 @@ void init_opt(t_options *options) {
 
 void ft_handleopt(t_options *options, char *option) {
     init_opt(options);
-    for (size_t i = 0; i < ft_strlen(option); i++)
+    
+    if (option != NULL)
     {
-        switch (option[i]) // init the options that we found earlier
+        for (size_t i = 0; i < ft_strlen(option); i++)
         {
-            case 'h':
-                options->h = true;
-                break;
-            case 'v':
-                options->v = true;
-                break;
-            default:
-                options->error = true;
-                break;
+            switch (option[i]) // init the options that we found earlier
+            {
+                case 'h':
+                    options->h = true;
+                    break;
+                case 'v':
+                    options->v = true;
+                    break;
+                default:
+                    options->error = true;
+                    break;
+            }
         }
     }
     if (options->h == true)
