@@ -6,7 +6,7 @@
 /*   By: alilin <alilin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/07 12:51:17 by alilin            #+#    #+#             */
-/*   Updated: 2023/01/18 21:54:39 by alilin           ###   ########.fr       */
+/*   Updated: 2023/01/19 16:19:07 by alilin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,7 @@ typedef struct  ping_env
     pid_t               pid;
 
     char                buf[76];
+    char                retbuf[1000];
     
     char                *host_dst;
     char				*hostname_dst;
@@ -62,6 +63,7 @@ typedef struct  ping_env
     struct addrinfo     hints;
     struct addrinfo     *res;
     
+    int                 receive;
     struct iovec        iov[1];
     struct msghdr       ret_hdr;
     int                 ret_ttl;    //returned ttl by the pinged system wich allows us to identify the operating system
