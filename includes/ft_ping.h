@@ -6,7 +6,7 @@
 /*   By: alilin <alilin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/07 12:51:17 by alilin            #+#    #+#             */
-/*   Updated: 2023/01/21 13:45:52 by alilin           ###   ########.fr       */
+/*   Updated: 2023/01/21 17:12:46 by alilin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,12 +30,21 @@
 # include <netinet/ip_icmp.h>
 # include <errno.h>
 
+#define PACKET_SIZE 84
+
 typedef struct  options
 {
     bool                h;
     bool                v;
     bool                error;
 }               t_options;
+
+typedef struct  pkt
+{
+	char			    hdr_buf[PACKET_SIZE];
+	struct ip	        *ip; // !! struct iphdr under linux and ip under mac
+	struct icmp	        *hdr; // !! struct icmphdr under linux and icmp under mac
+}				t_pkt;
 
 typedef struct  ping_env
 {
@@ -45,10 +54,12 @@ typedef struct  ping_env
     
     int                 sockfd;
     
-    struct icmp         *hdr; // !! struct icmphdr under linux and icmp under mac
+    // struct icmp         *hdr; // !! struct icmphdr under linux and icmp under mac
+    t_pkt               pkt;
     pid_t               pid;
+    int                 seq;
 
-    char                hdr_buf[sizeof(struct icmp)];
+    // char                hdr_buf[sizeof(struct icmp)];
     char                buf[1024];
     char                retbuf[CMSG_SPACE(sizeof(uint8_t))];
     
@@ -61,9 +72,11 @@ typedef struct  ping_env
     double              min;
     double              max;
     double			    cumul;
+    double              avg;
     
     struct addrinfo     hints;
     struct addrinfo     *res;
+    struct sockaddr_in	*sa_in;
     
     int                 receive;
     struct iovec        iov;
