@@ -6,7 +6,7 @@
 /*   By: alilin <alilin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/07 12:51:17 by alilin            #+#    #+#             */
-/*   Updated: 2023/01/21 17:12:46 by alilin           ###   ########.fr       */
+/*   Updated: 2023/01/21 21:42:53 by alilin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,12 +39,24 @@ typedef struct  options
     bool                error;
 }               t_options;
 
+typedef struct	signals
+{
+	int	                send;
+	int	                end;
+}				t_signals;
+
 typedef struct  pkt
 {
 	char			    hdr_buf[PACKET_SIZE];
 	struct ip	        *ip; // !! struct iphdr under linux and ip under mac
 	struct icmp	        *hdr; // !! struct icmphdr under linux and icmp under mac
 }				t_pkt;
+
+typedef struct	s_res
+{
+	struct iovec	    iov[1];
+	struct msghdr	    ret_hdr;
+}				t_res;
 
 typedef struct  ping_env
 {
@@ -60,15 +72,21 @@ typedef struct  ping_env
     int                 seq;
 
     // char                hdr_buf[sizeof(struct icmp)];
-    char                buf[1024];
-    char                retbuf[CMSG_SPACE(sizeof(uint8_t))];
+    // char                buf[1024];
+    // char                retbuf[CMSG_SPACE(sizeof(uint8_t))];
     
     char                *host_dst;
     char				*hostname_dst;
     int                 sent_pkt_count;
-    int                 sent;
-    bool                timeout_flag;
+    // int                 sent;
+    // bool                timeout_flag;
 
+    struct timeval	    start;
+	struct timeval	    end;
+	struct timeval	    s;
+	struct timeval	    r;
+
+    double              rtt;
     double              min;
     double              max;
     double			    cumul;
@@ -78,14 +96,16 @@ typedef struct  ping_env
     struct addrinfo     *res;
     struct sockaddr_in	*sa_in;
     
-    int                 receive;
-    struct iovec        iov;
-    struct msghdr       ret_hdr;
-    int                 ret_ttl;    //returned ttl by the pinged system wich allows us to identify the operating system
+    t_res               response;
+    int                 bytes;
+    // int                 receive;
+    // int                 ret_ttl;    //returned ttl by the pinged system wich allows us to identify the operating system
     int                 received_pkt_count;
+
+    t_signals           signals;
 }               t_ping_env;
 
-static bool             g_ping_loop;
+static t_ping_env       *env;
 
 void            print_error(char *error);
 char            *ft_getopt(char **av, char **options);

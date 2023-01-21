@@ -6,22 +6,57 @@
 /*   By: alilin <alilin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/07 12:54:59 by alilin            #+#    #+#             */
-/*   Updated: 2023/01/21 17:20:35 by alilin           ###   ########.fr       */
+/*   Updated: 2023/01/21 21:47:03 by alilin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ping.h"
 
-void int_handler(int sig) {
+void sig_handler(int sig) {
     if (sig == SIGINT)
-        g_ping_loop = false;
+	{
+		env->signals.end = 1;
+		// get_statistic();
+	}
+	if (sig == SIGALRM)
+		env->signals.send = 1;
     return;
 }
 
-void dns_lookup(t_ping_env *env, char **av)
+void init_params()
+{
+    if (!(env = malloc(sizeof(t_ping_env))))
+        print_error("Error: malloc failed\n");   
+	ft_bzero(env, sizeof(t_ping_env));
+    env->ttl = 255;
+    env->timeout = 1;
+    env->interval = 1;
+
+    env->pkt.ip = (struct ip *)env->pkt.hdr_buf;
+	env->pkt.hdr = (struct icmp *)(env->pkt.ip + 1);
+    env->pid = getpid();
+    env->seq = 0;
+    
+    // env->sent = 0;
+    env->sent_pkt_count = 0;
+    
+    env->rtt = 0;
+    env->min = 0.0;
+    env->max = 0.0;
+    env->cumul = 0;
+    env->avg = 0;
+    
+    // env->receive = 0;
+    env->bytes = 0;
+    env->received_pkt_count = 0;
+    env->signals.send = 1;
+    env->signals.end = 0;
+    // env->timeout_flag = false;
+}
+
+void dns_lookup(char **av)
 {
     int                 i;
-    int                 ret;
     char                *ip_share;
 
 
@@ -30,42 +65,36 @@ void dns_lookup(t_ping_env *env, char **av)
     {
         if (av[i][1] != '-')
         {
-            ft_memset(&(env->hints), 0, sizeof(struct addrinfo));
+            ft_bzero(&(env->hints), sizeof(env->hints));
             env->hints.ai_family = AF_INET;
             env->hints.ai_socktype = SOCK_RAW;
             env->hints.ai_protocol = IPPROTO_ICMP;
-            ret = getaddrinfo(av[i], NULL, &(env->hints), &(env->res));
-            if (ret != 0)
-            {
-                fprintf(stderr, "ping: %s: Name or service not known\n", av[i]);
-                exit(EXIT_FAILURE);
-            }
+            if (getaddrinfo(av[i], NULL, &(env->hints), &(env->res)) != 0)
+                print_error("ping: %s: Name or service not known\n");
             env->hostname_dst = av[i];
             env->sa_in = (struct sockaddr_in *)env->res->ai_addr;
             if ((ip_share = malloc(INET_ADDRSTRLEN)) < 0)
                 print_error("Error: malloc failed\n");
             inet_ntop(AF_INET, &(env->sa_in->sin_addr), ip_share, INET_ADDRSTRLEN);
             env->host_dst = ip_share;
-            free(ip_share);
         }
         i++;
     }
     return;
 }
 
-void set_socket(t_ping_env *env)
+void set_socket()
 {
     int             sock_fd;
     int             yes;
-    struct timeval	timeout;
+    // struct timeval	timeout;
 
-	timeout.tv_sec = 5;
-	timeout.tv_usec = 0;
+	// timeout.tv_sec = 5;
+	// timeout.tv_usec = 0;
     yes = 1;
     sock_fd = socket(AF_INET, SOCK_RAW, IPPROTO_ICMP);
     if (sock_fd < 0)
         print_error("Error: socket opening failed\n");
-    env->ttl = 255;
     if (setsockopt(sock_fd, IPPROTO_IP, IP_HDRINCL, &yes, sizeof(yes)) < 0)
 		print_error("Error: setsockopt failed\n");
     if (setsockopt(sock_fd, IPPROTO_IP, IP_TTL, &(env->ttl), sizeof(env->ttl)) == -1)
@@ -77,10 +106,8 @@ void set_socket(t_ping_env *env)
     env->sockfd = sock_fd;
 }
 
-void    configure_send(t_ping_env *env)
+void    configure_send()
 {  
-    env->pkt.ip = (struct ip *)env->pkt.hdr_buf;
-	env->pkt.hdr = (struct icmp *)(env->pkt.ip + 1);
     ft_bzero((void *)env->pkt.hdr_buf, PACKET_SIZE);
 	env->pkt.ip->ip_v = 4;
 	env->pkt.ip->ip_hl = sizeof(*(env->pkt.ip)) >> 2;
@@ -97,56 +124,98 @@ void    configure_send(t_ping_env *env)
     env->pkt.hdr->icmp_hun.ih_idseq.icd_seq = env->seq++; // icmp_hun.ih_idseq.icd_seq under mac and un.echo.sequence under linux
 }
 
-void    configure_receive(t_ping_env *env)
+void	send_packet()
 {
-    env->receive = 0;
-    ft_memset(&(env->buf), 0, sizeof(env->buf));
-    env->iov.iov_base = env->buf;
-	env->iov.iov_len = sizeof(env->buf);
-    ft_memset(&(env->ret_hdr), '\0', sizeof(env->ret_hdr));
-    env->ret_hdr.msg_name = env->res->ai_addr;
-    env->ret_hdr.msg_namelen = sizeof(*env->res->ai_addr);
-	env->ret_hdr.msg_iov = &env->iov;
-	env->ret_hdr.msg_iovlen = 1;
-	env->ret_hdr.msg_control = &env->retbuf;
-	env->ret_hdr.msg_controllen = sizeof(env->retbuf);
-	env->ret_hdr.msg_flags = 0;
+    configure_send();
+    if (sendto(env->sockfd, (void *)&env->pkt, PACKET_SIZE, 0, (void *)env->sa_in, sizeof(struct sockaddr_in)) < 0)
+        print_error("Error: sendto failed\n");
+    if (gettimeofday(&env->s, NULL) < 0)
+		print_error("Error: gettimeofday failed\n");
+	env->sent_pkt_count++;
+	env->signals.send = 0;
 }
 
-void ping_loop(t_ping_env *env)
+void    configure_receive()
 {
-    // struct timeval	tv_start, tv_end;
-    env->timeout = 1;
-    env->interval = 1;
+    t_res	*ret;
 
-    env->min = 0.0;
-    env->max = 0.0;
-    env->cumul = 0;
-    
-    env->seq = 0;
-    env->sent = 0;
-    env->sent_pkt_count = 0;
-    env->receive = 0;
-    env->received_pkt_count = 0;
-    env->timeout_flag = false;
-    g_ping_loop = true;
-    
-    configure_send(env);
+	ret = &env->response;
+    ft_bzero((void *)env->pkt.hdr_buf, sizeof(PACKET_SIZE));
+    ft_bzero(ret, sizeof(t_res));
+    ret->iov->iov_base = env->pkt.hdr_buf;
+	ret->iov->iov_len = sizeof(env->pkt.hdr_buf);
+    ret->ret_hdr.msg_name = NULL;
+    ret->ret_hdr.msg_namelen = 0;
+	ret->ret_hdr.msg_iov = ret->iov;
+	ret->ret_hdr.msg_iovlen = 1;
+	ret->ret_hdr.msg_flags = MSG_DONTWAIT;
+}
+
+void	get_packet(void)
+{
+	int			ret;
+
+	configure_receive();
+	while (!env->signals.end)
+	{
+		ret = recvmsg(env->sockfd, &env->response.ret_hdr, MSG_DONTWAIT);
+		if (ret > 0)
+		{
+			env->bytes = ret;
+			if (env->pkt.hdr->icmp_hun.ih_idseq.icd_id == env->pid)
+			{
+                printf("ttl = %d\n", env->pkt.ip->ip_ttl);
+				// calc_rtt();
+				// printf("%d bytes from %s: icmp_seq=%d ttl=%d time=%.2Lf ms\n",
+				// g_params->bytes - (int)sizeof(struct iphdr), g_params->addrstr,
+				// g_params->pckt.hdr->un.echo.sequence, g_params->pckt.ip->ttl,
+				// g_params->time.rtt);
+			}
+			// else if (g_params->flags & FLAG_V)
+			// 	printf_v();
+			return ;
+		}
+	}
+}
+
+void ping_loop()
+{
+    set_socket();
+    configure_send();
     printf("PING %s (%s) %d(%d) bytes of data.\n", env->hostname_dst, env->host_dst, 56, 84);
+    if (gettimeofday(&env->start, NULL) < 0)
+		print_error("Error: gettimeofday failed\n");
+    while (!env->signals.end)
+	{
+		if (env->signals.send)
+		{
+			send_packet();
+			alarm(1);
+			get_packet();
+		}
+	}
     // gettimeofday(&tv_start, NULL);
     // while(g_ping_loop == true)
     // {
-        if ((env->sent = sendto(env->sockfd, &(env->pkt), PACKET_SIZE, 0, (struct sockaddr *)env->res->ai_addr, sizeof(struct sockaddr))) < 0)
-        {
-            // print_error("Error: sendto failed\n");
-            exit(errno);
-        }
-        if (env->sent >= 0)
-        {
-            printf("caca\n");
-            // env->sent_pkt_count++;
-            // configure_receive(env);
-            // env->receive = recvmsg(env->sockfd, &(env->ret_hdr), MSG_TRUNC);
+        // if ((env->sent = sendto(env->sockfd, &(env->pkt), PACKET_SIZE, 0, (struct sockaddr *)env->res->ai_addr, sizeof(struct sockaddr))) < 0)
+        //     print_error("Error: sendto failed\n");
+        // if (env->sent >= 0)
+        // {
+        //     env->sent_pkt_count++;
+        //     configure_receive();
+        //     while (1)
+        //     {
+        //         env->receive = recvmsg(env->sockfd, &(env->response.ret_hdr), MSG_DONTWAIT);
+        //         if (env->receive > 0)
+        //         {
+        //             if (env->pkt.hdr->icmp_hun.ih_idseq.icd_id == env->pid)
+        //             {
+        //                 printf("ttl=%d\n", env->pkt.ip->ip_ttl);
+        //             }
+        //             return;
+        //         }
+                
+        //     }
             // printf("%d\n", env->receive);
             // if (env->receive > 0) {
             //     struct cmsghdr *cmsg;
@@ -162,13 +231,12 @@ void ping_loop(t_ping_env *env)
             //         }
             //     }
             // }
-        }
+        // }
         // usleep(env->interval);
     // // }    
 }
 
 int main(int ac, char  **av) {
-    t_ping_env env;
     t_options  opt;
 
     if (getuid() != 0)
@@ -184,10 +252,10 @@ int main(int ac, char  **av) {
     option = ft_getopt(av, options);
     ft_handleopt(&opt, option);
     free(option);
-    dns_lookup(&env, av);
-    set_socket(&env);
-    env.pid = getpid();
-    ping_loop(&env);
-    signal(SIGINT, int_handler);
+    init_params();
+    dns_lookup(av);
+    ping_loop();
+    signal(SIGALRM, sig_handler);
+	signal(SIGINT, sig_handler);
     return (0);
 }
