@@ -6,7 +6,7 @@
 /*   By: alilin <alilin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/07 12:51:17 by alilin            #+#    #+#             */
-/*   Updated: 2023/01/19 16:19:07 by alilin           ###   ########.fr       */
+/*   Updated: 2023/01/21 13:45:52 by alilin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,10 +24,11 @@
 # include <signal.h>
 # include <stdarg.h>
 # include <stdbool.h>
-# include <netinet/in.h>
 # include <arpa/inet.h>
 # include <netdb.h>
+# include <netinet/ip.h>
 # include <netinet/ip_icmp.h>
+# include <errno.h>
 
 typedef struct  options
 {
@@ -44,11 +45,12 @@ typedef struct  ping_env
     
     int                 sockfd;
     
-    struct icmphdr      *hdr; // !! struct icmphdr under linux and icmp under mac
+    struct icmp         *hdr; // !! struct icmphdr under linux and icmp under mac
     pid_t               pid;
 
-    char                buf[76];
-    char                retbuf[1000];
+    char                hdr_buf[sizeof(struct icmp)];
+    char                buf[1024];
+    char                retbuf[CMSG_SPACE(sizeof(uint8_t))];
     
     char                *host_dst;
     char				*hostname_dst;
@@ -64,12 +66,12 @@ typedef struct  ping_env
     struct addrinfo     *res;
     
     int                 receive;
-    struct iovec        iov[1];
+    struct iovec        iov;
     struct msghdr       ret_hdr;
     int                 ret_ttl;    //returned ttl by the pinged system wich allows us to identify the operating system
     int                 received_pkt_count;
 }               t_ping_env;
-    
+
 static bool             g_ping_loop;
 
 void            print_error(char *error);
