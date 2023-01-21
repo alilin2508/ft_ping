@@ -12,10 +12,10 @@
 
 #include "ft_ping.h"
 
-void print_error(char *error) {
+void	print_error(char *error) {
 	// free_all();
-    fprintf(stderr, "ping: %s", error);
-    exit(errno);
+	fprintf(stderr, "ping: %s", error);
+	exit(errno);
 }
 
 unsigned short calculate_checksum(unsigned short *data, int len)

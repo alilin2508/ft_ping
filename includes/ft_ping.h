@@ -32,84 +32,84 @@
 
 #define PACKET_SIZE 84
 
-typedef struct  options
+typedef struct	options
 {
-    bool                h;
-    bool                v;
-    bool                error;
-}               t_options;
+	bool			h;
+	bool			v;
+	bool			error;
+}		t_options;
 
 typedef struct	signals
 {
-	int	                send;
-	int	                end;
-}				t_signals;
+	int			send;
+	int			end;
+}		t_signals;
 
-typedef struct  pkt
+typedef struct	pkt
 {
-	char			    hdr_buf[PACKET_SIZE];
-	struct ip	        *ip; // !! struct iphdr under linux and ip under mac
-	struct icmp	        *hdr; // !! struct icmphdr under linux and icmp under mac
+	char			hdr_buf[PACKET_SIZE];
+	struct iphdr		*ip; // !! struct iphdr under linux and ip under mac
+	struct icmphdr		*hdr; // !! struct icmphdr under linux and icmp under mac
 }				t_pkt;
 
 typedef struct	s_res
 {
-	struct iovec	    iov[1];
-	struct msghdr	    ret_hdr;
-}				t_res;
+	struct iovec		iov[1];
+	struct msghdr		ret_hdr;
+}		t_res;
 
-typedef struct  ping_env
+typedef struct	ping_env
 {
-    int                 ttl; //send ttl settings: 255 on linux
-    int                 timeout;
-	double	            interval;
-    
-    int                 sockfd;
-    
-    // struct icmp         *hdr; // !! struct icmphdr under linux and icmp under mac
-    t_pkt               pkt;
-    pid_t               pid;
-    int                 seq;
+	int			ttl; //send ttl settings: 255 on linux
+	int			timeout;
+	double			interval;
 
-    // char                hdr_buf[sizeof(struct icmp)];
-    // char                buf[1024];
-    // char                retbuf[CMSG_SPACE(sizeof(uint8_t))];
-    
-    char                *host_dst;
-    char				*hostname_dst;
-    int                 sent_pkt_count;
-    // int                 sent;
-    // bool                timeout_flag;
+	int			sockfd;
 
-    struct timeval	    start;
-	struct timeval	    end;
-	struct timeval	    s;
-	struct timeval	    r;
+	// struct icmp		*hdr; // !! struct icmphdr under linux and icmp under mac
+	t_pkt			pkt;
+	pid_t			pid;
+	int			seq;
 
-    double              rtt;
-    double              min;
-    double              max;
-    double			    cumul;
-    double              avg;
+	// char			hdr_buf[sizeof(struct icmp)];
+	// char			buf[1024];
+	// char			retbuf[CMSG_SPACE(sizeof(uint8_t))];
     
-    struct addrinfo     hints;
-    struct addrinfo     *res;
-    struct sockaddr_in	*sa_in;
-    
-    t_res               response;
-    int                 bytes;
-    // int                 receive;
-    // int                 ret_ttl;    //returned ttl by the pinged system wich allows us to identify the operating system
-    int                 received_pkt_count;
+	char			*host_dst;
+	char			*hostname_dst;
+	int			sent_pkt_count;
+	// int			sent;
+	// bool			timeout_flag;
 
-    t_signals           signals;
+	struct timeval		start;
+	struct timeval		end;
+	struct timeval		s;
+	struct timeval		r;
+
+	double			rtt;
+	double			min;
+	double			max;
+	double			cumul;
+	double			avg;
+    
+	struct addrinfo		hints;
+	struct addrinfo		*res;
+	struct sockaddr_in	*sa_in;
+    
+	t_res			response;
+	int			bytes;
+	// int			receive;
+	// int			ret_ttl;    //returned ttl by the pinged system wich allows us to identify the operating system
+	int			received_pkt_count;
+
+	t_signals		signals;
 }               t_ping_env;
 
-static t_ping_env       *env;
+static t_ping_env		*env;
 
-void            print_error(char *error);
-char            *ft_getopt(char **av, char **options);
-void            ft_handleopt(t_options *options, char *option);
-unsigned short  calculate_checksum(unsigned short *data, int len);
+void		print_error(char *error);
+char		*ft_getopt(char **av, char **options);
+void		ft_handleopt(t_options *options, char *option);
+unsigned short 	calculate_checksum(unsigned short *data, int len);
 
 #endif
