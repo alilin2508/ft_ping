@@ -6,7 +6,7 @@
 /*   By: alilin <alilin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/11 17:58:30 by alilin            #+#    #+#             */
-/*   Updated: 2023/01/21 20:55:08 by alilin           ###   ########.fr       */
+/*   Updated: 2023/01/21 23:45:50 by alilin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,9 +18,9 @@ void	print_error(char *error) {
 	exit(errno);
 }
 
-unsigned short calculate_checksum(unsigned short *data, int len)
+unsigned short	checksum(unsigned short *data, int len)
 {
-	unsigned long checksum;
+	unsigned long	checksum;
 
 	checksum = 0;
 	while (len > 1)

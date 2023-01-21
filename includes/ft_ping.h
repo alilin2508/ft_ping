@@ -6,7 +6,7 @@
 /*   By: alilin <alilin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/07 12:51:17 by alilin            #+#    #+#             */
-/*   Updated: 2023/01/21 21:42:53 by alilin           ###   ########.fr       */
+/*   Updated: 2023/01/21 23:46:14 by alilin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ typedef struct	ping_env
 	// char			buf[1024];
 	// char			retbuf[CMSG_SPACE(sizeof(uint8_t))];
     
-	char			*host_dst;
+	char			host_dst[INET6_ADDRSTRLEN];
 	char			*hostname_dst;
 	int			sent_pkt_count;
 	// int			sent;
@@ -110,6 +110,6 @@ static t_ping_env		*env;
 void		print_error(char *error);
 char		*ft_getopt(char **av, char **options);
 void		ft_handleopt(t_options *options, char *option);
-unsigned short 	calculate_checksum(unsigned short *data, int len);
+unsigned short 	checksum(unsigned short *data, int len);
 
 #endif

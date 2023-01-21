@@ -6,7 +6,7 @@
 /*   By: alilin <alilin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/07 12:54:59 by alilin            #+#    #+#             */
-/*   Updated: 2023/01/21 23:26:20 by alilin           ###   ########.fr       */
+/*   Updated: 2023/01/21 23:54:41 by alilin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ void	init_params()
 	env->pkt.ip = (struct iphdr *)env->pkt.hdr_buf;
 	env->pkt.hdr = (struct icmphdr *)(env->pkt.ip + 1);
 	env->pid = getpid();
-	env->seq = 0;
+	env->seq = 1;
     
 	// env->sent = 0;
 	env->sent_pkt_count = 0;
@@ -57,7 +57,6 @@ void	init_params()
 void	dns_lookup(char **av)
 {
 	int		i;
-	char		*ip_share;
 
 	i = 1;
 	while(av[i])
@@ -72,10 +71,7 @@ void	dns_lookup(char **av)
 				print_error("ping: %s: Name or service not known\n");
 			env->hostname_dst = av[i];
 			env->sa_in = (struct sockaddr_in *)env->res->ai_addr;
-			if ((ip_share = malloc(INET_ADDRSTRLEN)) < 0)
-				print_error("Error: malloc failed\n");
-			inet_ntop(AF_INET, &(env->sa_in->sin_addr), ip_share, INET_ADDRSTRLEN);
-			env->host_dst = ip_share;
+			inet_ntop(AF_INET, (void *)&(env->sa_in->sin_addr), env->host_dst, INET6_ADDRSTRLEN);
 		}
 		i++;
 	}
@@ -96,8 +92,8 @@ void	set_socket()
 		print_error("Error: socket opening failed\n");
 	if (setsockopt(sock_fd, IPPROTO_IP, IP_HDRINCL, &yes, sizeof(yes)) < 0)
 		print_error("Error: setsockopt failed\n");
-	if (setsockopt(sock_fd, IPPROTO_IP, IP_TTL, &(env->ttl), sizeof(env->ttl)) == -1)
-		print_error("Error: setsockopt failed\n");
+	// if (setsockopt(sock_fd, IPPROTO_IP, IP_TTL, &(env->ttl), sizeof(env->ttl)) == -1)
+	// 	print_error("Error: setsockopt failed\n");
 	// if (setsockopt(sock_fd, IPPROTO_IP, IP_RECVTTL, &yes, sizeof(yes)) == -1)
 		// print_error("Error: setsockopt failed\n");
 	// if ((setsockopt(sock_fd, SOL_SOCKET, SO_RCVTIMEO, (const void *)&timeout, sizeof(timeout))) == -1)
@@ -118,7 +114,7 @@ void    configure_send()
 	// env->hdr = (struct icmp *)env->hdr_buf;
 	env->pkt.hdr->type = ICMP_ECHO; // icmp_type under mac and type under linux
 	env->pkt.hdr->code = 0; // icmp_code under mac and code under linux
-	env->pkt.hdr->checksum = calculate_checksum((unsigned short *)(env->pkt.hdr), sizeof(struct icmphdr)); // icmp_cksum under mac and checksum under linux
+	env->pkt.hdr->checksum = checksum((unsigned short *)(env->pkt.hdr), sizeof(struct icmphdr)); // icmp_cksum under mac and checksum under linux
 	env->pkt.hdr->un.echo.id = env->pid; // icmp_hun.ih_idseq.icd_id under mac and un.echo.id
 	env->pkt.hdr->un.echo.sequence = env->seq++; // icmp_hun.ih_idseq.icd_seq under mac and un.echo.sequence under linux
 }
@@ -139,9 +135,9 @@ void    configure_receive()
 	t_res		*ret;
 
 	ret = &env->response;
-	ft_bzero((void *)env->pkt.hdr_buf, sizeof(PACKET_SIZE));
+	ft_bzero((void *)env->pkt.hdr_buf, PACKET_SIZE);
 	ft_bzero(ret, sizeof(t_res));
-	ret->iov->iov_base = env->pkt.hdr_buf;
+	ret->iov->iov_base = (void *)env->pkt.hdr_buf;
 	ret->iov->iov_len = sizeof(env->pkt.hdr_buf);
 	ret->ret_hdr.msg_name = NULL;
 	ret->ret_hdr.msg_namelen = 0;
