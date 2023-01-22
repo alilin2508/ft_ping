@@ -6,7 +6,7 @@
 /*   By: alilin <alilin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/07 12:54:59 by alilin            #+#    #+#             */
-/*   Updated: 2023/01/21 23:54:41 by alilin           ###   ########.fr       */
+/*   Updated: 2023/01/22 15:26:23 by alilin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,8 @@ void	sig_handler(int sig) {
 		env->signals.end = 1;
 		// get_statistic();
 	}
-	if (sig == SIGALRM)
-		env->signals.send = 1;
+	// if (sig == SIGALRM)
+	// 	env->signals.send = 1;
 	return;
 }
 
@@ -29,7 +29,6 @@ void	init_params()
         	print_error("Error: malloc failed\n");   
 	ft_bzero(env, sizeof(t_ping_env));
 	env->ttl = 255;
-	env->timeout = 1;
 	env->interval = 1;
 	
 	env->pkt.ip = (struct iphdr *)env->pkt.hdr_buf;
@@ -114,9 +113,9 @@ void    configure_send()
 	// env->hdr = (struct icmp *)env->hdr_buf;
 	env->pkt.hdr->type = ICMP_ECHO; // icmp_type under mac and type under linux
 	env->pkt.hdr->code = 0; // icmp_code under mac and code under linux
-	env->pkt.hdr->checksum = checksum((unsigned short *)(env->pkt.hdr), sizeof(struct icmphdr)); // icmp_cksum under mac and checksum under linux
 	env->pkt.hdr->un.echo.id = env->pid; // icmp_hun.ih_idseq.icd_id under mac and un.echo.id
 	env->pkt.hdr->un.echo.sequence = env->seq++; // icmp_hun.ih_idseq.icd_seq under mac and un.echo.sequence under linux
+	env->pkt.hdr->checksum = checksum((unsigned short *)(env->pkt.hdr), sizeof(struct icmphdr)); // icmp_cksum under mac and checksum under linux
 }
 
 void	send_packet()
