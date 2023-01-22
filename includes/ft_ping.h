@@ -6,7 +6,7 @@
 /*   By: alilin <alilin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/07 12:51:17 by alilin            #+#    #+#             */
-/*   Updated: 2023/01/21 23:46:14 by alilin           ###   ########.fr       */
+/*   Updated: 2023/01/22 15:57:46 by alilin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,12 +39,6 @@ typedef struct	options
 	bool			error;
 }		t_options;
 
-typedef struct	signals
-{
-	int			send;
-	int			end;
-}		t_signals;
-
 typedef struct	pkt
 {
 	char			hdr_buf[PACKET_SIZE];
@@ -54,6 +48,7 @@ typedef struct	pkt
 
 typedef struct	s_res
 {
+	char			retbuf[1024];
 	struct iovec		iov[1];
 	struct msghdr		ret_hdr;
 }		t_res;
@@ -61,25 +56,17 @@ typedef struct	s_res
 typedef struct	ping_env
 {
 	int			ttl; //send ttl settings: 255 on linux
-	int			timeout;
 	double			interval;
 
 	int			sockfd;
 
-	// struct icmp		*hdr; // !! struct icmphdr under linux and icmp under mac
 	t_pkt			pkt;
 	pid_t			pid;
 	int			seq;
-
-	// char			hdr_buf[sizeof(struct icmp)];
-	// char			buf[1024];
-	// char			retbuf[CMSG_SPACE(sizeof(uint8_t))];
     
-	char			host_dst[INET6_ADDRSTRLEN];
+	char			host_dst[INET_ADDRSTRLEN];
 	char			*hostname_dst;
 	int			sent_pkt_count;
-	// int			sent;
-	// bool			timeout_flag;
 
 	struct timeval		start;
 	struct timeval		end;
@@ -98,11 +85,10 @@ typedef struct	ping_env
     
 	t_res			response;
 	int			bytes;
-	// int			receive;
-	// int			ret_ttl;    //returned ttl by the pinged system wich allows us to identify the operating system
 	int			received_pkt_count;
+	int			error_pkt_count;
 
-	t_signals		signals;
+	bool			send;
 }               t_ping_env;
 
 static t_ping_env		*env;
