@@ -6,7 +6,7 @@
 /*   By: alilin <alilin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/07 12:54:59 by alilin            #+#    #+#             */
-/*   Updated: 2023/01/23 19:30:25 by alilin           ###   ########.fr       */
+/*   Updated: 2023/01/23 19:32:42 by alilin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ void	dns_lookup(char **av)
 	i = 1;
 	while(av[i])
 	{
-		if (av[i][1] != '-')
+		if (av[i][0] != '-')
 		{
 			ft_bzero(&(env->hints), sizeof(env->hints));
 			env->hints.ai_family = AF_INET;
