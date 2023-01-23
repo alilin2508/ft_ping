@@ -6,12 +6,12 @@
 #    By: alilin <alilin@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/11/07 13:56:40 by alilin            #+#    #+#              #
-#    Updated: 2022/11/08 14:40:51 by alilin           ###   ########.fr        #
+#    Updated: 2023/01/23 14:32:06 by alilin           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME	= 	libft.a
-CC 		= 	gcc
+CC 		= 	clang
 FLAGS	= 	-Wall -Wextra -Werror
 RM		= 	rm -rf
 

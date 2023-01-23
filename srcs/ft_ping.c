@@ -6,17 +6,37 @@
 /*   By: alilin <alilin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/07 12:54:59 by alilin            #+#    #+#             */
-/*   Updated: 2023/01/22 15:56:49 by alilin           ###   ########.fr       */
+/*   Updated: 2023/01/23 15:19:22 by alilin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ping.h"
 
-void	sig_handler(int sig) {
-	if (sig == SIGINT)
+void    get_statistic()
+{
+    if (gettimeofday(&env->end, NULL) < 0)
+		print_error("Error: gettimeofday failed\n");
+    double loss;
+    double time;
+
+    loss = ((env->received_pkt_count / env->sent_pkt_count) * 100);
+    time = (((env->end.tv_sec - env->start.tv_sec) * (uint64_t)1000) + ((env->end.tv_usec - env->start.tv_usec) / 1000));
+
+    printf("--- %s ping statistics ---\n", env->hostname_dst);
+    if (env->error_pkt_count != 0)
+        printf("%d packets transmitted, %d received, +%d errors, %f%% packet loss, time %fms\n", env->sent_pkt_count, env->received_pkt_count, env->error_pkt_count, loss, time);
+    else
+        printf("%d packets transmitted, %d received, %f%% packet loss, time %fms\n", env->sent_pkt_count, env->received_pkt_count, loss, time);
+    printf("rtt min/avg/max/mdev = %f/%f/%f/%f ms", env->min, env->avg, env->max, env->mdev);
+}
+
+void	sig_handler(int sig)
+{
+	if (sig == SIGINT) 
 	{
 		env->send = false;
-		// get_statistic();
+		get_statistic();
+        // free_all()
 	}
 	return;
 }
@@ -39,7 +59,7 @@ void	init_params()
 	env->rtt = 0;
 	env->min = 0.0;
 	env->max = 0.0;
-	env->cumul = 0;
+	env->mdev = 0;
 	env->avg = 0;
     
 	env->bytes = 0;
@@ -114,7 +134,6 @@ void	send_packet()
 	if (gettimeofday(&env->s, NULL) < 0)
 		print_error("Error: gettimeofday failed\n");
 	env->sent_pkt_count++;
-	
 }
 
 void    configure_receive()
@@ -131,6 +150,17 @@ void    configure_receive()
 	env->response.ret_hdr.msg_controllen = sizeof(env->response.retbuf);
 }
 
+void    calc_rtt()
+{
+    env->rtt = (((env->r.tv_sec - env->s.tv_sec) * (uint64_t)1000) + ((env->r.tv_usec - env->s.tv_usec) / 1000));
+    if (env->rtt > env->max)
+        env->max = env->rtt;
+    if (env->rtt < env->min || env->min == 0.0)
+        env->min = env->rtt;
+    env->avg = ((env->avg + env->rtt) / env->received_pkt_count);
+    env->mdev = (fabs(env->rtt - env->avg) / env->received_pkt_count);
+}
+
 void	get_packet(void)
 {
 	int		ret;
@@ -142,12 +172,11 @@ void	get_packet(void)
 		env->bytes = ret;
 		if (env->pkt.hdr->un.echo.id == env->pid)
 		{
-			printf("ttl = %d\n", env->pkt.ip->ttl);
-			// calc_rtt();
-			// printf("%d bytes from %s: icmp_seq=%d ttl=%d time=%.2Lf ms\n",
-			// g_params->bytes - (int)sizeof(struct iphdr), g_params->addrstr,
-			// g_params->pckt.hdr->un.echo.sequence, g_params->pckt.ip->ttl,
-			// g_params->time.rtt);
+            if (gettimeofday(&env->r, NULL) < 0)
+		        print_error("Error: gettimeofday failed\n");
+            env->received_pkt_count++;
+			calc_rtt();
+            printf("%d bytes from %s (%s): icmp_seq=%d ttl=%d time=%f ms\n", env->bytes, env->hostname_dst, env->host_dst, env->pkt.hdr->un.echo.sequence, env->pkt.ip->ttl, env->rtt);
 		}
 		// else if (g_params->flags & FLAG_V)
 		// 	printf_v();
@@ -187,7 +216,6 @@ int	main(int ac, char  **av) {
 	init_params();
 	dns_lookup(av);
 	ping_loop();
-	signal(SIGALRM, sig_handler);
 	signal(SIGINT, sig_handler);
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: alilin <alilin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/07 12:51:17 by alilin            #+#    #+#             */
-/*   Updated: 2023/01/22 15:57:46 by alilin           ###   ########.fr       */
+/*   Updated: 2023/01/23 14:54:26 by alilin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@
 # include <netinet/ip.h>
 # include <netinet/ip_icmp.h>
 # include <errno.h>
+# include <math.h>
 
 #define PACKET_SIZE 84
 
@@ -76,7 +77,7 @@ typedef struct	ping_env
 	double			rtt;
 	double			min;
 	double			max;
-	double			cumul;
+	double			mdev;
 	double			avg;
     
 	struct addrinfo		hints;
