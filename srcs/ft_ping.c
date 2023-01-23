@@ -6,7 +6,7 @@
 /*   By: alilin <alilin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/07 12:54:59 by alilin            #+#    #+#             */
-/*   Updated: 2023/01/23 19:32:42 by alilin           ###   ########.fr       */
+/*   Updated: 2023/01/23 19:34:20 by alilin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ void    get_statistic()
 	time += (env->end.tv_sec - env->start.tv_sec);
 	time *= 1000.0;
 
-    printf("--- %s ping statistics ---\n", env->hostname_dst);
+    printf("\n--- %s ping statistics ---\n", env->hostname_dst);
     if (env->error_pkt_count != 0)
         printf("%d packets transmitted, %d received, +%d errors, %.0Lf%% packet loss, time %.0Lfms\n", env->sent_pkt_count, env->received_pkt_count, env->error_pkt_count, loss, time);
     else
@@ -184,7 +184,7 @@ void	get_packet(t_options *opt)
 	int		ret;
 
 	configure_receive();
-	ret = recvmsg(env->sockfd, &env->response.ret_hdr, MSG_DONTWAIT);
+	ret = recvmsg(env->sockfd, &env->response.ret_hdr, 0);
 	if (ret > 0)
 	{
 		env->bytes = ret;
