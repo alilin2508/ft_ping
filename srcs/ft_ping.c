@@ -6,7 +6,7 @@
 /*   By: alilin <alilin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/07 12:54:59 by alilin            #+#    #+#             */
-/*   Updated: 2023/01/23 19:25:19 by alilin           ###   ########.fr       */
+/*   Updated: 2023/01/23 19:29:47 by alilin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -162,7 +162,7 @@ void    calc_rtt()
     if (env->rtt < env->min || env->min == 0.0)
         env->min = env->rtt;
     env->avg += env->rtt;
-    env->mdev = (fabs(env->rtt - env->avg) / env->received_pkt_count);
+    env->mdev = (fabsl(env->rtt - env->avg) / env->received_pkt_count);
 }
 
 void	print_ttl()
