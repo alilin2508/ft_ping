@@ -6,7 +6,7 @@
 /*   By: alilin <alilin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/07 12:51:17 by alilin            #+#    #+#             */
-/*   Updated: 2023/01/23 20:34:21 by alilin           ###   ########.fr       */
+/*   Updated: 2023/01/23 21:27:39 by alilin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,9 +77,8 @@ typedef struct	ping_env
 	long double			rtt;
 	long double			min;
 	long double			max;
-	long double			sumsquare;
 	long double			avg;
-	long double			*rttbuf;
+	long double			rttbuf[1000];
     
 	struct addrinfo		hints;
 	struct addrinfo		*res;

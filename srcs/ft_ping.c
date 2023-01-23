@@ -6,7 +6,7 @@
 /*   By: alilin <alilin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/07 12:54:59 by alilin            #+#    #+#             */
-/*   Updated: 2023/01/23 20:39:50 by alilin           ###   ########.fr       */
+/*   Updated: 2023/01/23 21:25:56 by alilin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,20 +20,27 @@ void    get_statistic()
     long double time;
 	long double	mdev;
 
+	mdev = 0.0;
     loss = (((env->sent_pkt_count - env->received_pkt_count) / env->sent_pkt_count) * 100);
 	time = (env->end.tv_usec - env->start.tv_usec) / 1000000.0;
 	time += (env->end.tv_sec - env->start.tv_sec);
 	time *= 1000.0;
 	env->avg /= env->received_pkt_count;
-	mdev = (env->sumsquare / env->received_pkt_count) - (env->avg * env->avg);
-	mdev = sqrtl(mdev);
+	env->rttbuf[env->received_pkt_count] = -1;
+	for (int i = 0; env->rttbuf[i] != -1; i++)
+	{
+		mdev += fabsl(env->rttbuf[i] - env->avg);
+	}
+	mdev /= env->received_pkt_count;
 
     printf("\n--- %s ping statistics ---\n", env->hostname_dst);
     if (env->error_pkt_count != 0)
         printf("%d packets transmitted, %d received, +%d errors, %.0Lf%% packet loss, time %.0Lfms\n", env->sent_pkt_count, env->received_pkt_count, env->error_pkt_count, loss, time);
     else
+	{
         printf("%d packets transmitted, %d received, %.0Lf%% packet loss, time %.0Lfms\n", env->sent_pkt_count, env->received_pkt_count, loss, time);
-    printf("rtt min/avg/max/mdev = %.3Lf/%.3Lf/%.3Lf/%.3Lf ms\n", env->min, env->avg, env->max, mdev);
+    	printf("rtt min/avg/max/mdev = %.3Lf/%.3Lf/%.3Lf/%.3Lf ms\n", env->min, env->avg, env->max, mdev);
+	}
 }
 
 void	sig_handler(int sig)
@@ -65,7 +72,6 @@ void	init_params()
 	env->rtt = 0;
 	env->min = 0.0;
 	env->max = 0.0;
-	env->sumsquare = 0;
 	env->avg = 0;
     
 	env->bytes = 0;
@@ -166,12 +172,12 @@ void    calc_rtt()
     if (env->rtt < env->min || env->min == 0.0)
         env->min = env->rtt;
     env->avg += env->rtt;
-    env->sumsquare += env->rtt * env->rtt; 
+	env->rttbuf[env->received_pkt_count - 1] = env->rtt;
 }
 
 void	print_ttl()
 {
-	printf("From localhost (172.17.0.1) icmp_seq=%d Time to live exceeded\n", env->pkt.hdr->un.echo.sequence);
+	printf("From localhost (172.17.0.1) icmp_seq=%d Time to live exceeded\n", env->sent_pkt_count);
 	env->error_pkt_count++;
 }
 
