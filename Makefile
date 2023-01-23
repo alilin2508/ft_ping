@@ -6,7 +6,7 @@
 #    By: alilin <alilin@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/11/07 12:30:25 by thhusser          #+#    #+#              #
-#    Updated: 2023/01/21 21:15:10 by alilin           ###   ########.fr        #
+#    Updated: 2023/01/23 20:40:38 by alilin           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -53,7 +53,7 @@ $(DIR_OBJ)/%.o:	$(DIR_SRCS)/%.c
 
 $(NAME): $(OBJS)
 	make -C $(PATH_LIBFT)
-	@$(CC) $(FLAGS) $(DIR_INC) $(OBJS) -o $(NAME) -L $(PATH_LIBFT) -lft
+	@$(CC) $(FLAGS) $(DIR_INC) $(OBJS) -o $(NAME) -L $(PATH_LIBFT) -lft -lm
 	@printf "$(_GREEN)Generating $(NAME) $(_NC)\n"
 
 clean:
