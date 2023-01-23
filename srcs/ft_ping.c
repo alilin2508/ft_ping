@@ -6,7 +6,7 @@
 /*   By: alilin <alilin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/07 12:54:59 by alilin            #+#    #+#             */
-/*   Updated: 2023/01/23 19:29:47 by alilin           ###   ########.fr       */
+/*   Updated: 2023/01/23 19:30:25 by alilin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -175,7 +175,7 @@ void	print_verbose()
 {
 	char	str[INET_ADDRSTRLEN];
 
-	printf("%d bytes from %s: type=%d code=%d\n", env->bytes - (int)sizeof(struct iphdr), inet_ntop(AF_INET, (void*)&env->pkt.ip->saddr, str, NET_ADDRSTRLEN), env->pkt.hdr->type, env->pkt.hdr->code);
+	printf("%d bytes from %s: type=%d code=%d\n", env->bytes - (int)sizeof(struct iphdr), inet_ntop(AF_INET, (void*)&env->pkt.ip->saddr, str, INET_ADDRSTRLEN), env->pkt.hdr->type, env->pkt.hdr->code);
 	env->error_pkt_count++;
 }
 
