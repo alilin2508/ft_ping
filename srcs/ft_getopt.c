@@ -6,7 +6,7 @@
 /*   By: alilin <alilin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/07 12:55:07 by alilin            #+#    #+#             */
-/*   Updated: 2023/01/18 20:22:00 by alilin           ###   ########.fr       */
+/*   Updated: 2023/01/23 19:25:40 by alilin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,6 @@ char	*ft_getopt(char **av, char **options) {
 	i = 1;
 	flag = false;
 	option = NULL;
-	(void)options;
 	while (av[i])
 	{
 		if (av[i][0] != '-')

@@ -6,7 +6,7 @@
 /*   By: alilin <alilin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/07 12:54:59 by alilin            #+#    #+#             */
-/*   Updated: 2023/01/23 15:19:22 by alilin           ###   ########.fr       */
+/*   Updated: 2023/01/23 19:25:19 by alilin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,18 +16,20 @@ void    get_statistic()
 {
     if (gettimeofday(&env->end, NULL) < 0)
 		print_error("Error: gettimeofday failed\n");
-    double loss;
-    double time;
+    long double loss;
+    long double time;
 
-    loss = ((env->received_pkt_count / env->sent_pkt_count) * 100);
-    time = (((env->end.tv_sec - env->start.tv_sec) * (uint64_t)1000) + ((env->end.tv_usec - env->start.tv_usec) / 1000));
+    loss = (((env->sent_pkt_count - env->received_pkt_count) / env->sent_pkt_count) * 100);
+	time = (env->end.tv_usec - env->start.tv_usec) / 1000000.0;
+	time += (env->end.tv_sec - env->start.tv_sec);
+	time *= 1000.0;
 
     printf("--- %s ping statistics ---\n", env->hostname_dst);
     if (env->error_pkt_count != 0)
-        printf("%d packets transmitted, %d received, +%d errors, %f%% packet loss, time %fms\n", env->sent_pkt_count, env->received_pkt_count, env->error_pkt_count, loss, time);
+        printf("%d packets transmitted, %d received, +%d errors, %.0Lf%% packet loss, time %.0Lfms\n", env->sent_pkt_count, env->received_pkt_count, env->error_pkt_count, loss, time);
     else
-        printf("%d packets transmitted, %d received, %f%% packet loss, time %fms\n", env->sent_pkt_count, env->received_pkt_count, loss, time);
-    printf("rtt min/avg/max/mdev = %f/%f/%f/%f ms", env->min, env->avg, env->max, env->mdev);
+        printf("%d packets transmitted, %d received, %.0Lf%% packet loss, time %.0Lfms\n", env->sent_pkt_count, env->received_pkt_count, loss, time);
+    printf("rtt min/avg/max/mdev = %.3Lf/%.3Lf/%.3Lf/%.3Lf ms\n", env->min, (env->avg / env->received_pkt_count), env->max, env->mdev);
 }
 
 void	sig_handler(int sig)
@@ -36,7 +38,7 @@ void	sig_handler(int sig)
 	{
 		env->send = false;
 		get_statistic();
-        // free_all()
+        free_all();
 	}
 	return;
 }
@@ -152,16 +154,32 @@ void    configure_receive()
 
 void    calc_rtt()
 {
-    env->rtt = (((env->r.tv_sec - env->s.tv_sec) * (uint64_t)1000) + ((env->r.tv_usec - env->s.tv_usec) / 1000));
+	env->rtt = (env->r.tv_usec - env->s.tv_usec) / 1000000.0;
+	env->rtt += (env->r.tv_sec - env->s.tv_sec);
+	env->rtt *= 1000.0;
     if (env->rtt > env->max)
         env->max = env->rtt;
     if (env->rtt < env->min || env->min == 0.0)
         env->min = env->rtt;
-    env->avg = ((env->avg + env->rtt) / env->received_pkt_count);
+    env->avg += env->rtt;
     env->mdev = (fabs(env->rtt - env->avg) / env->received_pkt_count);
 }
 
-void	get_packet(void)
+void	print_ttl()
+{
+	printf("From localhost (172.17.0.1) icmp_seq=%d Time to live exceeded\n", env->pkt.hdr->un.echo.sequence);
+	env->error_pkt_count++;
+}
+
+void	print_verbose()
+{
+	char	str[INET_ADDRSTRLEN];
+
+	printf("%d bytes from %s: type=%d code=%d\n", env->bytes - (int)sizeof(struct iphdr), inet_ntop(AF_INET, (void*)&env->pkt.ip->saddr, str, NET_ADDRSTRLEN), env->pkt.hdr->type, env->pkt.hdr->code);
+	env->error_pkt_count++;
+}
+
+void	get_packet(t_options *opt)
 {
 	int		ret;
 
@@ -176,15 +194,17 @@ void	get_packet(void)
 		        print_error("Error: gettimeofday failed\n");
             env->received_pkt_count++;
 			calc_rtt();
-            printf("%d bytes from %s (%s): icmp_seq=%d ttl=%d time=%f ms\n", env->bytes, env->hostname_dst, env->host_dst, env->pkt.hdr->un.echo.sequence, env->pkt.ip->ttl, env->rtt);
+            printf("%d bytes from %s (%s): icmp_seq=%d ttl=%d time=%.2Lf ms\n", env->bytes, env->hostname_dst, env->host_dst, env->pkt.hdr->un.echo.sequence, env->pkt.ip->ttl, env->rtt);
 		}
-		// else if (g_params->flags & FLAG_V)
-		// 	printf_v();
+		else if (env->pkt.hdr->type == 11 && env->pkt.hdr->code == 0)
+			print_ttl();
+		else if (opt->v == true && (env->pkt.hdr->type != 11 && env->pkt.hdr->code != 0))
+			print_verbose();
 		return ;
 	}
 }
 
-void	ping_loop()
+void	ping_loop(t_options *opt)
 {
 	set_socket();
 	printf("PING %s (%s) %d(%d) bytes of data.\n", env->hostname_dst, env->host_dst, 56, 84);
@@ -193,13 +213,15 @@ void	ping_loop()
 	while (env->send == true)
 	{
 		send_packet();
-		get_packet();
+		usleep(1000);
+		get_packet(opt);
 		sleep(env->interval);
 	}
 }
 
 int	main(int ac, char  **av) {
 	t_options	opt;
+	
 	if (getuid() != 0)
 		print_error("error: Operation not permitted\n");
 	if (ac < 2)
@@ -213,9 +235,9 @@ int	main(int ac, char  **av) {
 	option = ft_getopt(av, options);
 	ft_handleopt(&opt, option);
 	free(option);
+	signal(SIGINT, sig_handler);
 	init_params();
 	dns_lookup(av);
-	ping_loop();
-	signal(SIGINT, sig_handler);
+	ping_loop(&opt);
 	return (0);
 }

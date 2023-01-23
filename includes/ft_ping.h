@@ -6,7 +6,7 @@
 /*   By: alilin <alilin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/07 12:51:17 by alilin            #+#    #+#             */
-/*   Updated: 2023/01/23 14:54:26 by alilin           ###   ########.fr       */
+/*   Updated: 2023/01/23 19:25:04 by alilin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@
 # include <errno.h>
 # include <math.h>
 
-#define PACKET_SIZE 84
+#define PACKET_SIZE 64
 
 typedef struct	options
 {
@@ -74,11 +74,12 @@ typedef struct	ping_env
 	struct timeval		s;
 	struct timeval		r;
 
-	double			rtt;
-	double			min;
-	double			max;
-	double			mdev;
-	double			avg;
+	long double			rtt;
+	long double			min;
+	long double			max;
+	long double			mdev;
+	long double			avg;
+	long double			*rttbuf
     
 	struct addrinfo		hints;
 	struct addrinfo		*res;
@@ -94,6 +95,7 @@ typedef struct	ping_env
 
 static t_ping_env		*env;
 
+void		free_all();
 void		print_error(char *error);
 char		*ft_getopt(char **av, char **options);
 void		ft_handleopt(t_options *options, char *option);
