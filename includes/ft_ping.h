@@ -6,7 +6,7 @@
 /*   By: alilin <alilin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/07 12:51:17 by alilin            #+#    #+#             */
-/*   Updated: 2023/01/24 10:40:36 by alilin           ###   ########.fr       */
+/*   Updated: 2023/01/24 13:48:57 by alilin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,6 @@ typedef struct	pkt
 
 typedef struct	s_res
 {
-	char			retbuf[1024];
 	struct iovec		iov[1];
 	struct msghdr		ret_hdr;
 }		t_res;
@@ -65,8 +64,7 @@ typedef struct	ping_env
 	pid_t			pid;
 	int			seq;
     
-	char    		*ip_share;
-	char			*host_dst;
+	char			host_dst[INET_ADDRSTRLEN];
 	char			*hostname_dst;
 	int			sent_pkt_count;
 

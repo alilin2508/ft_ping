@@ -6,7 +6,7 @@
 /*   By: alilin <alilin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/07 12:54:59 by alilin            #+#    #+#             */
-/*   Updated: 2023/01/24 10:41:45 by alilin           ###   ########.fr       */
+/*   Updated: 2023/01/24 13:48:03 by alilin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,12 +97,7 @@ void	dns_lookup(char **av)
 				print_error("ping: %s: Name or service not known\n");
 			env->hostname_dst = av[i];
 			env->sa_in = (struct sockaddr_in *)env->res->ai_addr;
-			if (env->ip_share != NULL)
-				free(env->ip_share);
-			if ((ip_share = malloc(INET_ADDRSTRLEN)) < 0)
-				print_error("Error: malloc failed\n");
-			inet_ntop(AF_INET, (void *)&(env->sa_in->sin_addr), env->ip_share, INET_ADDRSTRLEN);
-    		env->host_dst = env->ip_share;
+			inet_ntop(AF_INET, (void *)&(env->sa_in->sin_addr), env->host_dst, INET_ADDRSTRLEN);
 		}
 		i++;
 	}
@@ -163,8 +158,6 @@ void    configure_receive()
 	env->response.ret_hdr.msg_iov = env->response.iov;
 	env->response.ret_hdr.msg_iovlen = 1;
 	env->response.ret_hdr.msg_flags = MSG_DONTWAIT;
-	env->response.ret_hdr.msg_control = &env->response.retbuf;
-	env->response.ret_hdr.msg_controllen = sizeof(env->response.retbuf);
 }
 
 void    calc_rtt()

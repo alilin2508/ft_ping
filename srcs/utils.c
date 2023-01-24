@@ -6,7 +6,7 @@
 /*   By: alilin <alilin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/11 17:58:30 by alilin            #+#    #+#             */
-/*   Updated: 2023/01/24 10:42:21 by alilin           ###   ########.fr       */
+/*   Updated: 2023/01/24 13:48:12 by alilin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,8 +37,6 @@ unsigned short	checksum(unsigned short *data, int len)
 
 void free_all()
 {
-	if (env->ip_share != NULL)
-		free(env->ip_share);
 	if (env != NULL)
 		free(env);
 }
