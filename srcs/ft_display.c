@@ -6,7 +6,7 @@
 /*   By: alilin <alilin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/12 17:13:20 by alilin            #+#    #+#             */
-/*   Updated: 2023/01/24 17:17:49 by alilin           ###   ########.fr       */
+/*   Updated: 2023/01/24 17:52:44 by alilin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,19 +40,29 @@ void    get_statistic(t_ping_env *env)
 	time += (env->end.tv_sec - env->start.tv_sec);
 	time *= 1000.0;
 	env->avg /= env->received_pkt_count;
-	env->rttbuf[env->received_pkt_count] = -1;
-	for (int i = 0; env->rttbuf[i] != -1; i++)
+	if (env->received_pkt_count != 0)
 	{
-		mdev += fabsl(env->rttbuf[i] - env->avg);
+		for (int i = 0; env->rttbuf[i] != -1; i++)
+		{
+			mdev += fabsl(env->rttbuf[i] - env->avg);
+		}
+		mdev /= env->received_pkt_count;
+		free(env->rttbuf);
 	}
-	mdev /= env->received_pkt_count;
-	free(env->rttbuf);
     printf("\n--- %s ping statistics ---\n", env->hostname_dst);
     if (env->error_pkt_count != 0)
+	{
         printf("%d packets transmitted, %d received, +%d errors, %.0Lf%% packet loss, time %.0Lfms\n", env->sent_pkt_count, env->received_pkt_count, env->error_pkt_count, loss, time);
-    else
+		if (env->received_pkt_count != 0)
+			printf("rtt min/avg/max/mdev = %.3Lf/%.3Lf/%.3Lf/%.3Lf ms\n", env->min, env->avg, env->max, mdev);
+	}
+    else if (env->received_pkt_count > 0 && env->error_pkt_count == 0)
 	{
         printf("%d packets transmitted, %d received, %.0Lf%% packet loss, time %.0Lfms\n", env->sent_pkt_count, env->received_pkt_count, loss, time);
     	printf("rtt min/avg/max/mdev = %.3Lf/%.3Lf/%.3Lf/%.3Lf ms\n", env->min, env->avg, env->max, mdev);
+	}
+	else
+	{
+		printf("%d packets transmitted, %d received, %.0Lf%% packet loss, time %.0Lfms\n", env->sent_pkt_count, env->received_pkt_count, loss, time);
 	}
 }
