@@ -6,7 +6,7 @@
 /*   By: alilin <alilin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/07 12:51:17 by alilin            #+#    #+#             */
-/*   Updated: 2023/01/24 13:48:57 by alilin           ###   ########.fr       */
+/*   Updated: 2023/01/24 16:36:50 by alilin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ typedef struct	ping_env
 	long double			min;
 	long double			max;
 	long double			avg;
-	// long double			rttbuf[1000];
+	long double			*rttbuf;
     
 	struct addrinfo		hints;
 	struct addrinfo		*res;
@@ -87,13 +87,10 @@ typedef struct	ping_env
 	int			bytes;
 	int			received_pkt_count;
 	int			error_pkt_count;
-
-	bool			send;
 }               t_ping_env;
 
-static t_ping_env		*env;
+static bool		g_send;
 
-void		free_all();
 void		print_error(char *error);
 char		*ft_getopt(char **av, char **options);
 void		ft_handleopt(t_options *options, char *option);

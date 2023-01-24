@@ -6,14 +6,14 @@
 /*   By: alilin <alilin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/11 17:58:30 by alilin            #+#    #+#             */
-/*   Updated: 2023/01/24 13:48:12 by alilin           ###   ########.fr       */
+/*   Updated: 2023/01/24 16:21:07 by alilin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ping.h"
 
-void	print_error(char *error) {
-	free_all();
+void	print_error(char *error)
+{
 	fprintf(stderr, "ping: %s", error);
 	exit(errno);
 }
@@ -33,10 +33,4 @@ unsigned short	checksum(unsigned short *data, int len)
 	checksum = (checksum >> 16) + (checksum & 0xffff);
 	checksum = checksum + (checksum >> 16);
 	return (unsigned short)(~checksum);
-}
-
-void free_all()
-{
-	if (env != NULL)
-		free(env);
 }
