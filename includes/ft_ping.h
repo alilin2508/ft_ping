@@ -6,7 +6,7 @@
 /*   By: alilin <alilin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/07 12:51:17 by alilin            #+#    #+#             */
-/*   Updated: 2023/01/23 21:27:39 by alilin           ###   ########.fr       */
+/*   Updated: 2023/01/24 10:40:36 by alilin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,8 +55,8 @@ typedef struct	s_res
 }		t_res;
 
 typedef struct	ping_env
-{
-	int			ttl; //send ttl settings: 255 on linux
+{	
+	int				ttl; // 255 on linux
 	double			interval;
 
 	int			sockfd;
@@ -65,7 +65,8 @@ typedef struct	ping_env
 	pid_t			pid;
 	int			seq;
     
-	char			host_dst[INET_ADDRSTRLEN];
+	char    		*ip_share;
+	char			*host_dst;
 	char			*hostname_dst;
 	int			sent_pkt_count;
 
@@ -78,7 +79,7 @@ typedef struct	ping_env
 	long double			min;
 	long double			max;
 	long double			avg;
-	long double			rttbuf[1000];
+	// long double			rttbuf[1000];
     
 	struct addrinfo		hints;
 	struct addrinfo		*res;

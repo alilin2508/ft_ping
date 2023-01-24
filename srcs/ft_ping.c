@@ -6,7 +6,7 @@
 /*   By: alilin <alilin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/07 12:54:59 by alilin            #+#    #+#             */
-/*   Updated: 2023/01/23 21:25:56 by alilin           ###   ########.fr       */
+/*   Updated: 2023/01/24 10:41:45 by alilin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,20 +18,20 @@ void    get_statistic()
 		print_error("Error: gettimeofday failed\n");
     long double loss;
     long double time;
-	long double	mdev;
+	// long double	mdev;
 
-	mdev = 0.0;
+	// mdev = 0.0;
     loss = (((env->sent_pkt_count - env->received_pkt_count) / env->sent_pkt_count) * 100);
 	time = (env->end.tv_usec - env->start.tv_usec) / 1000000.0;
 	time += (env->end.tv_sec - env->start.tv_sec);
 	time *= 1000.0;
 	env->avg /= env->received_pkt_count;
-	env->rttbuf[env->received_pkt_count] = -1;
-	for (int i = 0; env->rttbuf[i] != -1; i++)
-	{
-		mdev += fabsl(env->rttbuf[i] - env->avg);
-	}
-	mdev /= env->received_pkt_count;
+	// env->rttbuf[env->received_pkt_count] = -1;
+	// for (int i = 0; env->rttbuf[i] != -1; i++)
+	// {
+	// 	mdev += fabsl(env->rttbuf[i] - env->avg);
+	// }
+	// mdev /= env->received_pkt_count;
 
     printf("\n--- %s ping statistics ---\n", env->hostname_dst);
     if (env->error_pkt_count != 0)
@@ -39,7 +39,7 @@ void    get_statistic()
     else
 	{
         printf("%d packets transmitted, %d received, %.0Lf%% packet loss, time %.0Lfms\n", env->sent_pkt_count, env->received_pkt_count, loss, time);
-    	printf("rtt min/avg/max/mdev = %.3Lf/%.3Lf/%.3Lf/%.3Lf ms\n", env->min, env->avg, env->max, mdev);
+    	// printf("rtt min/avg/max/mdev = %.3Lf/%.3Lf/%.3Lf/%.3Lf ms\n", env->min, env->avg, env->max, mdev);
 	}
 }
 
@@ -97,7 +97,12 @@ void	dns_lookup(char **av)
 				print_error("ping: %s: Name or service not known\n");
 			env->hostname_dst = av[i];
 			env->sa_in = (struct sockaddr_in *)env->res->ai_addr;
-			inet_ntop(AF_INET, (void *)&(env->sa_in->sin_addr), env->host_dst, INET_ADDRSTRLEN);
+			if (env->ip_share != NULL)
+				free(env->ip_share);
+			if ((ip_share = malloc(INET_ADDRSTRLEN)) < 0)
+				print_error("Error: malloc failed\n");
+			inet_ntop(AF_INET, (void *)&(env->sa_in->sin_addr), env->ip_share, INET_ADDRSTRLEN);
+    		env->host_dst = env->ip_share;
 		}
 		i++;
 	}
@@ -172,7 +177,7 @@ void    calc_rtt()
     if (env->rtt < env->min || env->min == 0.0)
         env->min = env->rtt;
     env->avg += env->rtt;
-	env->rttbuf[env->received_pkt_count - 1] = env->rtt;
+	// env->rttbuf[env->received_pkt_count - 1] = env->rtt;
 }
 
 void	print_ttl()
