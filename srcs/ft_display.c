@@ -6,7 +6,7 @@
 /*   By: alilin <alilin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/12 17:13:20 by alilin            #+#    #+#             */
-/*   Updated: 2023/01/24 17:12:28 by alilin           ###   ########.fr       */
+/*   Updated: 2023/01/24 17:17:49 by alilin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,11 +46,7 @@ void    get_statistic(t_ping_env *env)
 		mdev += fabsl(env->rttbuf[i] - env->avg);
 	}
 	mdev /= env->received_pkt_count;
-	if (env->rttbuf != NULL)
-		printf("caca1\n");
 	free(env->rttbuf);
-	if (!env->rttbuf)
-		printf("caca2\n");
     printf("\n--- %s ping statistics ---\n", env->hostname_dst);
     if (env->error_pkt_count != 0)
         printf("%d packets transmitted, %d received, +%d errors, %.0Lf%% packet loss, time %.0Lfms\n", env->sent_pkt_count, env->received_pkt_count, env->error_pkt_count, loss, time);

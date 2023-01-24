@@ -6,7 +6,7 @@
 /*   By: alilin <alilin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/07 12:54:59 by alilin            #+#    #+#             */
-/*   Updated: 2023/01/24 16:46:27 by alilin           ###   ########.fr       */
+/*   Updated: 2023/01/24 17:22:31 by alilin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,8 @@ void	dns_lookup(char **av, t_ping_env *env)
 		}
 		i++;
 	}
+	if (!env->hostname_dst)
+		print_error("ping: usage error: Destination address required\n");
 	return;
 }
 

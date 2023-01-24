@@ -6,7 +6,7 @@
 /*   By: alilin <alilin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/12 17:13:20 by alilin            #+#    #+#             */
-/*   Updated: 2023/01/24 17:10:02 by alilin           ###   ########.fr       */
+/*   Updated: 2023/01/24 17:18:30 by alilin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,17 +45,9 @@ void	send_packet(t_ping_env *env)
 {
 	configure_send(env);
 	if (sendto(env->sockfd, (void *)&env->pkt, PACKET_SIZE, 0, env->res->ai_addr, env->res->ai_addrlen) < 0)
-	{
-		if (env->rttbuf != NULL)
-			free(env->rttbuf);
 		print_error("Error: sendto failed\n");
-	}
 	if (gettimeofday(&env->s, NULL) < 0)
-	{
-		if (env->rttbuf != NULL)
-			free(env->rttbuf);
 		print_error("Error: gettimeofday failed\n");
-	}
 	env->sent_pkt_count++;
 }
 
@@ -71,11 +63,7 @@ void	get_packet(t_options *opt, t_ping_env *env)
 		if (env->pkt.hdr->un.echo.id == env->pid)
 		{
             if (gettimeofday(&env->r, NULL) < 0)
-			{
-				if (env->rttbuf != NULL)
-					free(env->rttbuf);
 		        print_error("Error: gettimeofday failed\n");
-			}
             env->received_pkt_count++;
 			calc_rtt(env);
             printf("%d bytes from %s (%s): icmp_seq=%d ttl=%d time=%.2Lf ms\n", env->bytes, env->hostname_dst, env->host_dst, env->pkt.hdr->un.echo.sequence, env->pkt.ip->ttl, env->rtt);
