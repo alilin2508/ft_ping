@@ -6,7 +6,7 @@
 /*   By: alilin <alilin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/11 17:58:30 by alilin            #+#    #+#             */
-/*   Updated: 2023/01/24 16:45:47 by alilin           ###   ########.fr       */
+/*   Updated: 2023/01/24 17:11:01 by alilin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,11 @@ void    calc_rtt(t_ping_env *env)
 	else
 	{
 		if (!(tmp = malloc(sizeof(long double) * (env->received_pkt_count + 1))))
+		{
+			if (env->rttbuf != NULL)
+				free(env->rttbuf);
 			print_error("Error: malloc failed\n");
+		}
 		for(i = 0; i < env->received_pkt_count; i++)
 		{
 			tmp[i] = env->rttbuf[i];
