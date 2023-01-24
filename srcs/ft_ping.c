@@ -6,7 +6,7 @@
 /*   By: alilin <alilin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/07 12:54:59 by alilin            #+#    #+#             */
-/*   Updated: 2023/01/24 17:22:31 by alilin           ###   ########.fr       */
+/*   Updated: 2023/01/24 17:31:23 by alilin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ void	init_params(t_ping_env *env)
 	env->pid = getpid();
 	env->seq = 1;
     
+	env->hostname_dst = NULL;
 	env->sent_pkt_count = 0;
     
 	env->rtt = 0;
@@ -58,7 +59,10 @@ void	dns_lookup(char **av, t_ping_env *env)
 			env->hints.ai_socktype = SOCK_RAW;
 			env->hints.ai_protocol = IPPROTO_ICMP;
 			if (getaddrinfo(av[i], NULL, &(env->hints), &(env->res)) != 0)
-				print_error("ping: %s: Name or service not known\n");
+			{
+				fprintf(stderr, "ping: %s: Name or service not known\n", av[i]);
+				exit(errno);
+			}
 			env->hostname_dst = av[i];
 			env->sa_in = (struct sockaddr_in *)env->res->ai_addr;
 			inet_ntop(AF_INET, (void *)&(env->sa_in->sin_addr), env->host_dst, INET_ADDRSTRLEN);
