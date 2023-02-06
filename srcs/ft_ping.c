@@ -6,7 +6,7 @@
 /*   By: alilin <alilin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/07 12:54:59 by alilin            #+#    #+#             */
-/*   Updated: 2023/02/06 10:07:42 by alilin           ###   ########.fr       */
+/*   Updated: 2023/02/06 10:37:23 by alilin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ void	sig_handler(int sig)
 
 void	init_params(t_ping_env *env)
 {
-	env->ttl = 255;
+	env->ttl = 64;
 	env->interval = 1;
 	
 	env->pkt.ip = (struct iphdr *)env->pkt.hdr_buf;
