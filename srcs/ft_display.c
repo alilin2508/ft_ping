@@ -6,7 +6,7 @@
 /*   By: alilin <alilin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/12 17:13:20 by alilin            #+#    #+#             */
-/*   Updated: 2023/01/24 17:52:44 by alilin           ###   ########.fr       */
+/*   Updated: 2023/02/06 10:30:28 by alilin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 void	print_ttl(t_ping_env *env)
 {
-	printf("From localhost (172.17.0.1) icmp_seq=%d Time to live exceeded\n", env->sent_pkt_count);
+	printf("From _gateway (%s) icmp_seq=%d Time to live exceeded\n", inet_ntop(AF_INET, (void*)&env->pkt.ip->saddr, str, INET_ADDRSTRLEN), env->sent_pkt_count);
 	env->error_pkt_count++;
 }
 
@@ -22,7 +22,8 @@ void	print_verbose(t_ping_env *env)
 {
 	char	str[INET_ADDRSTRLEN];
 
-	printf("%d bytes from %s: type=%d code=%d\n", env->bytes - (int)sizeof(struct iphdr), inet_ntop(AF_INET, (void*)&env->pkt.ip->saddr, str, INET_ADDRSTRLEN), env->pkt.hdr->type, env->pkt.hdr->code);
+	printf("From _gateway (%s) icmp_seq=%d type=%d code=%d\n", inet_ntop(AF_INET, (void*)&env->pkt.ip->saddr, str, INET_ADDRSTRLEN), env->sent_pkt_count, env->pkt.hdr->type, env->pkt.hdr->code);
+	// printf("%d bytes from %s: type=%d code=%d\n", env->bytes - (int)sizeof(struct iphdr), inet_ntop(AF_INET, (void*)&env->pkt.ip->saddr, str, INET_ADDRSTRLEN), env->pkt.hdr->type, env->pkt.hdr->code);
 	env->error_pkt_count++;
 }
 
