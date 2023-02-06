@@ -6,7 +6,7 @@
 /*   By: alilin <alilin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/07 12:51:17 by alilin            #+#    #+#             */
-/*   Updated: 2023/01/24 16:48:50 by alilin           ###   ########.fr       */
+/*   Updated: 2023/02/06 10:07:09 by alilin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,7 +98,7 @@ unsigned short 	checksum(unsigned short *data, int len);
 void    	configure_send(t_ping_env *env);
 void    	configure_receive(t_ping_env *env);
 void		send_packet(t_ping_env *env);
-void		get_packet(t_options *opt, t_ping_env *env);
+void		get_packet(t_ping_env *env);
 void    	calc_rtt(t_ping_env *env);
 void    	get_statistic(t_ping_env *env);
 void		print_verbose(t_ping_env *env);

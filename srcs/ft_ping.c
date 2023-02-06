@@ -6,7 +6,7 @@
 /*   By: alilin <alilin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/07 12:54:59 by alilin            #+#    #+#             */
-/*   Updated: 2023/01/24 17:59:41 by alilin           ###   ########.fr       */
+/*   Updated: 2023/02/06 10:07:42 by alilin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,7 @@ void	set_socket(t_ping_env *env)
 	env->sockfd = sock_fd;
 }
 
-void	ping_loop(t_options *opt, t_ping_env *env)
+void	ping_loop(t_ping_env *env)
 {
 	set_socket(env);
 	printf("PING %s (%s) %d(%d) bytes of data.\n", env->hostname_dst, env->host_dst, 56, 84);
@@ -103,7 +103,7 @@ void	ping_loop(t_options *opt, t_ping_env *env)
 	{
 		send_packet(env);
 		usleep(1000);
-		get_packet(opt, env);
+		get_packet(env);
 		sleep(env->interval);
 	}
 	get_statistic(env);
@@ -129,6 +129,6 @@ int	main(int ac, char  **av) {
 	signal(SIGINT, sig_handler);
 	init_params(&env);
 	dns_lookup(av, &env);
-	ping_loop(&opt, &env);
+	ping_loop(&env);
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: alilin <alilin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/12 17:13:20 by alilin            #+#    #+#             */
-/*   Updated: 2023/01/24 17:18:30 by alilin           ###   ########.fr       */
+/*   Updated: 2023/02/06 10:06:48 by alilin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ void	send_packet(t_ping_env *env)
 	env->sent_pkt_count++;
 }
 
-void	get_packet(t_options *opt, t_ping_env *env)
+void	get_packet(t_ping_env *env)
 {
 	int		ret;
 
@@ -70,7 +70,7 @@ void	get_packet(t_options *opt, t_ping_env *env)
 		}
 		else if (env->pkt.hdr->type == 11 && env->pkt.hdr->code == 0)
 			print_ttl(env);
-		else if (opt->v == true && (env->pkt.hdr->type != 11 && env->pkt.hdr->code != 0))
+		else if (env->pkt.hdr->type != 11 && env->pkt.hdr->code != 0)
 			print_verbose(env);
 		return ;
 	}
