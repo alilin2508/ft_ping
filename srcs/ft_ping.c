@@ -6,7 +6,7 @@
 /*   By: alilin <alilin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/07 12:54:59 by alilin            #+#    #+#             */
-/*   Updated: 2023/02/06 18:33:06 by alilin           ###   ########.fr       */
+/*   Updated: 2023/02/06 18:35:31 by alilin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ void	dns_lookup(char **av, t_ping_env *env)
 	{
 		if (av[i][0] != '-')
 		{
-			if (env->host_dst != NULL)
+			if (env->hostname_dst)
 				freeaddrinfo(env->res);
 			ft_bzero(&(env->hints), sizeof(env->hints));
 			env->hints.ai_family = AF_INET;
