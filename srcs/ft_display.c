@@ -6,7 +6,7 @@
 /*   By: alilin <alilin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/12 17:13:20 by alilin            #+#    #+#             */
-/*   Updated: 2023/02/06 18:27:31 by alilin           ###   ########.fr       */
+/*   Updated: 2023/02/06 18:40:21 by alilin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,11 +41,11 @@ void	disp_stats(t_ping_env *env)
 	{
 		for (int i = 0; env->rttbuf[i] != -1; i++)
 		{
-			mdev += fabsl(env->rttbuf[i] - env->avg);
+			mdev += fabsl(env->rttbuf[i] - avg);
 		}
 		mdev /= env->received_pkt_count;
 	}
-	printf("%d/%d packets, %.0Lf%% loss, min/avg/mdev/max = %.3Lf/%.3Lf/%.3Lf/%.3Lf ms\n", env->received_pkt_count, env->sent_pkt_count, loss, env->min, env->avg, mdev, env->max);
+	printf("%d/%d packets, %.0Lf%% loss, min/avg/mdev/max = %.3Lf/%.3Lf/%.3Lf/%.3Lf ms\n", env->received_pkt_count, env->sent_pkt_count, loss, env->min, avg, mdev, env->max);
 }
 
 void    get_statistic(t_ping_env *env)
