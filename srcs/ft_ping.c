@@ -6,7 +6,7 @@
 /*   By: alilin <alilin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/07 12:54:59 by alilin            #+#    #+#             */
-/*   Updated: 2023/02/06 18:28:33 by alilin           ###   ########.fr       */
+/*   Updated: 2023/02/06 18:33:06 by alilin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 void	sig_handler(int sig)
 {
-	if (sig = SIGQUIT)
+	if (sig == SIGQUIT)
 	{
 		g_send[1] = true;
 	}
@@ -60,7 +60,7 @@ void	dns_lookup(char **av, t_ping_env *env)
 		if (av[i][0] != '-')
 		{
 			if (env->host_dst != NULL)
-				freeaddrinfo(env->host_dst);
+				freeaddrinfo(env->res);
 			ft_bzero(&(env->hints), sizeof(env->hints));
 			env->hints.ai_family = AF_INET;
 			env->hints.ai_socktype = SOCK_RAW;
@@ -143,6 +143,6 @@ int	main(int ac, char  **av) {
 	init_params(&env);
 	dns_lookup(av, &env);
 	ping_loop(&env);
-	freeaddrinfo(env->host_dst);
+	freeaddrinfo(env.res);
 	return (0);
 }

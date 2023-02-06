@@ -6,7 +6,7 @@
 /*   By: alilin <alilin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/07 12:51:17 by alilin            #+#    #+#             */
-/*   Updated: 2023/02/06 18:28:19 by alilin           ###   ########.fr       */
+/*   Updated: 2023/02/06 18:31:39 by alilin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,7 @@ typedef struct	ping_env
 	int			error_pkt_count;
 }               t_ping_env;
 
-static bool		g_send[1];
+static bool		g_send[2];
 
 void		print_error(char *error);
 char		*ft_getopt(char **av, char **options);
