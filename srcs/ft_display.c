@@ -6,7 +6,7 @@
 /*   By: alilin <alilin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/12 17:13:20 by alilin            #+#    #+#             */
-/*   Updated: 2023/02/06 10:57:46 by alilin           ###   ########.fr       */
+/*   Updated: 2023/02/06 18:27:31 by alilin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,26 @@ void	print_verbose(t_ping_env *env)
 
 	printf("From _gateway (%s) icmp_seq=%d type=%d code=%d\n", inet_ntop(AF_INET, (void*)&env->pkt.ip->saddr, str, INET_ADDRSTRLEN), env->sent_pkt_count, env->pkt.hdr->type, env->pkt.hdr->code);
 	env->error_pkt_count++;
+}
+
+void	disp_stats(t_ping_env *env)
+{
+	long double	avg;
+	long double loss;
+	long double	mdev;
+
+	mdev = 0.0;
+    loss = (((env->sent_pkt_count - env->received_pkt_count) / env->sent_pkt_count) * 100);
+	avg = env->avg / env->received_pkt_count;
+	if (env->received_pkt_count != 0)
+	{
+		for (int i = 0; env->rttbuf[i] != -1; i++)
+		{
+			mdev += fabsl(env->rttbuf[i] - env->avg);
+		}
+		mdev /= env->received_pkt_count;
+	}
+	printf("%d/%d packets, %.0Lf%% loss, min/avg/mdev/max = %.3Lf/%.3Lf/%.3Lf/%.3Lf ms\n", env->received_pkt_count, env->sent_pkt_count, loss, env->min, env->avg, mdev, env->max);
 }
 
 void    get_statistic(t_ping_env *env)

@@ -6,7 +6,7 @@
 /*   By: alilin <alilin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/07 12:54:59 by alilin            #+#    #+#             */
-/*   Updated: 2023/02/06 18:08:35 by alilin           ###   ########.fr       */
+/*   Updated: 2023/02/06 18:28:33 by alilin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,13 @@
 
 void	sig_handler(int sig)
 {
+	if (sig = SIGQUIT)
+	{
+		g_send[1] = true;
+	}
 	if (sig == SIGINT) 
 	{
-		g_send = false;
+		g_send[0] = false;
 	}
 	return;
 }
@@ -42,7 +46,8 @@ void	init_params(t_ping_env *env)
 	env->bytes = 0;
 	env->received_pkt_count = 0;
 	env->error_pkt_count = 0;
-	g_send = true;
+	g_send[0] = true;
+	g_send[1] = false;
 }
 
 void	dns_lookup(char **av, t_ping_env *env)
@@ -101,12 +106,18 @@ void	ping_loop(t_ping_env *env)
 	printf("PING %s (%s) %d(%d) bytes of data.\n", env->hostname_dst, env->host_dst, 56, 84);
 	if (gettimeofday(&env->start, NULL) < 0)
 		print_error("Error: gettimeofday failed\n");
-	while (g_send == true)
+	while (g_send[0] == true)
 	{
 		send_packet(env);
 		usleep(1000);
 		get_packet(env);
+		if (g_send[1] == true)
+		{
+			disp_stats(env);
+			g_send[1] = false;
+		}
 		sleep(env->interval);
+		
 	}
 	get_statistic(env);
 }
