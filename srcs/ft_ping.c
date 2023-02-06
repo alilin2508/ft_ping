@@ -6,7 +6,7 @@
 /*   By: alilin <alilin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/07 12:54:59 by alilin            #+#    #+#             */
-/*   Updated: 2023/02/06 18:35:31 by alilin           ###   ########.fr       */
+/*   Updated: 2023/02/06 18:37:57 by alilin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,6 +140,7 @@ int	main(int ac, char  **av) {
 	ft_handleopt(&opt, option);
 	free(option);
 	signal(SIGINT, sig_handler);
+	signal(SIGQUIT, sig_handler);
 	init_params(&env);
 	dns_lookup(av, &env);
 	ping_loop(&env);
