@@ -6,7 +6,7 @@
 /*   By: alilin <alilin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/12 17:13:20 by alilin            #+#    #+#             */
-/*   Updated: 2023/02/06 10:33:45 by alilin           ###   ########.fr       */
+/*   Updated: 2023/02/06 10:57:46 by alilin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,6 @@ void	print_verbose(t_ping_env *env)
 	char	str[INET_ADDRSTRLEN];
 
 	printf("From _gateway (%s) icmp_seq=%d type=%d code=%d\n", inet_ntop(AF_INET, (void*)&env->pkt.ip->saddr, str, INET_ADDRSTRLEN), env->sent_pkt_count, env->pkt.hdr->type, env->pkt.hdr->code);
-	// printf("%d bytes from %s: type=%d code=%d\n", env->bytes - (int)sizeof(struct iphdr), inet_ntop(AF_INET, (void*)&env->pkt.ip->saddr, str, INET_ADDRSTRLEN), env->pkt.hdr->type, env->pkt.hdr->code);
 	env->error_pkt_count++;
 }
 
