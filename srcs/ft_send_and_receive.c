@@ -6,7 +6,7 @@
 /*   By: alilin <alilin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/12 17:13:20 by alilin            #+#    #+#             */
-/*   Updated: 2023/02/09 16:51:45 by alilin           ###   ########.fr       */
+/*   Updated: 2023/02/09 16:59:51 by alilin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ void	get_packet(t_ping_env *env)
 	if (ret > 0)
 	{
 		env->bytes = ret;
-		if ((env->pkt.hdr->un.echo.id == env->pid) && (env->pkt.hdr->un.echo.sequence != env->seq))
+		if (env->pkt.hdr->un.echo.id == env->pid && env->pkt.hdr->type == 0 && env->pkt.hdr->code == 0)
 		{
             if (gettimeofday(&env->r, NULL) < 0)
 		        print_error("Error: gettimeofday failed\n");
