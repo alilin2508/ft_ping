@@ -6,7 +6,7 @@
 /*   By: alilin <alilin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/07 12:54:59 by alilin            #+#    #+#             */
-/*   Updated: 2023/02/09 17:01:50 by alilin           ###   ########.fr       */
+/*   Updated: 2023/02/09 17:03:48 by alilin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,13 +109,14 @@ void	ping_loop(t_ping_env *env)
 	while (g_send[0] == true)
 	{
 		send_packet(env);
+		usleep(1000);
 		get_packet(env);
 		if (g_send[1] == true)
 		{
 			disp_stats(env);
 			g_send[1] = false;
 		}
-		sleep(1);
+		usleep(1000);
 	}
 	get_statistic(env);
 }
