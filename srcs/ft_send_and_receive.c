@@ -6,7 +6,7 @@
 /*   By: alilin <alilin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/12 17:13:20 by alilin            #+#    #+#             */
-/*   Updated: 2023/02/06 10:06:48 by alilin           ###   ########.fr       */
+/*   Updated: 2023/02/09 16:34:52 by alilin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,10 @@ void	get_packet(t_ping_env *env)
 		        print_error("Error: gettimeofday failed\n");
             env->received_pkt_count++;
 			calc_rtt(env);
-            printf("%d bytes from %s (%s): icmp_seq=%d ttl=%d time=%.2Lf ms\n", env->bytes, env->hostname_dst, env->host_dst, env->pkt.hdr->un.echo.sequence, env->pkt.ip->ttl, env->rtt);
+			if ((ft_strlen(env->hostname_dst) == ft_strlen(env->host_dst)) && (!ft_strncmp(env->hostname_dst, env->host_dst, ft_strlen(env->host_dst))))
+				printf("%d bytes from %s: icmp_seq=%d ttl=%d time=%.2Lf ms\n", env->bytes, env->host_dst, env->pkt.hdr->un.echo.sequence, env->pkt.ip->ttl, env->rtt);
+			else
+            	printf("%d bytes from %s (%s): icmp_seq=%d ttl=%d time=%.2Lf ms\n", env->bytes, env->hostname_dst, env->host_dst, env->pkt.hdr->un.echo.sequence, env->pkt.ip->ttl, env->rtt);
 		}
 		else if (env->pkt.hdr->type == 11 && env->pkt.hdr->code == 0)
 			print_ttl(env);
