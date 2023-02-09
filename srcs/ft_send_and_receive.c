@@ -6,7 +6,7 @@
 /*   By: alilin <alilin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/12 17:13:20 by alilin            #+#    #+#             */
-/*   Updated: 2023/02/09 17:27:01 by alilin           ###   ########.fr       */
+/*   Updated: 2023/02/09 17:50:47 by alilin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ void    configure_receive(t_ping_env *env)
 	env->response.ret_hdr.msg_namelen = 0;
 	env->response.ret_hdr.msg_iov = env->response.iov;
 	env->response.ret_hdr.msg_iovlen = 1;
-	env->response.ret_hdr.msg_flags = MSG_DONTWAIT;
+	// env->response.ret_hdr.msg_flags = MSG_DONTWAIT;
 }
 
 void	send_packet(t_ping_env *env)
@@ -77,7 +77,7 @@ void	get_packet(t_ping_env *env)
 		}
 		else if (env->pkt.hdr->type == 11 && env->pkt.hdr->code == 0)
 			print_ttl(env);
-		else if (env->pkt.hdr->type != 11 && env->pkt.hdr->code == 0)
+		else if ((env->pkt.hdr->type != 11 && env->pkt.hdr->type != 8) && env->pkt.hdr->code == 0)
 			print_verbose(env);
 		return ;
 	}
