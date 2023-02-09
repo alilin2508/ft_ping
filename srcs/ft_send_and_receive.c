@@ -6,7 +6,7 @@
 /*   By: alilin <alilin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/12 17:13:20 by alilin            #+#    #+#             */
-/*   Updated: 2023/02/09 16:59:51 by alilin           ###   ########.fr       */
+/*   Updated: 2023/02/09 17:24:16 by alilin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,9 @@ void    configure_send(t_ping_env *env)
 	env->pkt.hdr->type = ICMP_ECHO; // icmp_type under mac and type under linux
 	env->pkt.hdr->code = 0; // icmp_code under mac and code under linux
 	env->pkt.hdr->un.echo.id = env->pid; // icmp_hun.ih_idseq.icd_id under mac and un.echo.id
-	env->pkt.hdr->un.echo.sequence = env->seq++; // icmp_hun.ih_idseq.icd_seq under mac and un.echo.sequence under linux
+	env->pkt.hdr->un.echo.sequence = env->seq; // icmp_hun.ih_idseq.icd_seq under mac and un.echo.sequence under linux
 	env->pkt.hdr->checksum = checksum((unsigned short*)env->pkt.hdr, sizeof(struct icmphdr)); // icmp_cksum under mac and checksum under linux
+	env->seq++;
 }
 
 
@@ -44,11 +45,14 @@ void    configure_receive(t_ping_env *env)
 void	send_packet(t_ping_env *env)
 {
 	configure_send(env);
-	if (sendto(env->sockfd, (void *)&env->pkt, PACKET_SIZE, 0, env->res->ai_addr, env->res->ai_addrlen) < 0)
-		print_error("Error: sendto failed\n");
-	if (gettimeofday(&env->s, NULL) < 0)
-		print_error("Error: gettimeofday failed\n");
-	env->sent_pkt_count++;
+	if (env->pkt.hdr->un.echo.sequence != emv->seq)
+	{
+		if (sendto(env->sockfd, (void *)&env->pkt, PACKET_SIZE, 0, env->res->ai_addr, env->res->ai_addrlen) < 0)
+			print_error("Error: sendto failed\n");
+		if (gettimeofday(&env->s, NULL) < 0)
+			print_error("Error: gettimeofday failed\n");
+		env->sent_pkt_count++;
+	}
 }
 
 void	get_packet(t_ping_env *env)
