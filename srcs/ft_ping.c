@@ -6,7 +6,7 @@
 /*   By: alilin <alilin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/07 12:54:59 by alilin            #+#    #+#             */
-/*   Updated: 2023/02/09 17:05:37 by alilin           ###   ########.fr       */
+/*   Updated: 2023/02/09 17:08:05 by alilin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,7 +116,7 @@ void	ping_loop(t_ping_env *env)
 			disp_stats(env);
 			g_send[1] = false;
 		}
-		sleep(0.7);
+		sleep(1);
 	}
 	get_statistic(env);
 }
