@@ -6,7 +6,7 @@
 /*   By: alilin <alilin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/12 17:13:20 by alilin            #+#    #+#             */
-/*   Updated: 2023/02/06 18:40:21 by alilin           ###   ########.fr       */
+/*   Updated: 2023/02/09 17:59:47 by alilin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,10 @@ void	disp_stats(t_ping_env *env)
 	long double	mdev;
 
 	mdev = 0.0;
-    loss = (((env->sent_pkt_count - env->received_pkt_count) / env->sent_pkt_count) * 100);
+    loss = 0.0;
+    loss = env->sent_pkt_count - env->received_pkt_count;
+	loss /= env->sent_pkt_count;
+	loss *= 100;
 	avg = env->avg / env->received_pkt_count;
 	if (env->received_pkt_count != 0)
 	{
@@ -57,7 +60,10 @@ void    get_statistic(t_ping_env *env)
 	long double	mdev;
 
 	mdev = 0.0;
-    loss = (((env->sent_pkt_count - env->received_pkt_count) / env->sent_pkt_count) * 100);
+	loss = 0.0;
+    loss = env->sent_pkt_count - env->received_pkt_count;
+	loss /= env->sent_pkt_count;
+	loss *= 100;
 	time = (env->end.tv_usec - env->start.tv_usec) / 1000000.0;
 	time += (env->end.tv_sec - env->start.tv_sec);
 	time *= 1000.0;
