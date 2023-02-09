@@ -6,7 +6,7 @@
 /*   By: alilin <alilin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/12 17:13:20 by alilin            #+#    #+#             */
-/*   Updated: 2023/02/09 17:24:16 by alilin           ###   ########.fr       */
+/*   Updated: 2023/02/09 17:25:12 by alilin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ void    configure_receive(t_ping_env *env)
 void	send_packet(t_ping_env *env)
 {
 	configure_send(env);
-	if (env->pkt.hdr->un.echo.sequence != emv->seq)
+	if (env->pkt.hdr->un.echo.sequence != env->seq)
 	{
 		if (sendto(env->sockfd, (void *)&env->pkt, PACKET_SIZE, 0, env->res->ai_addr, env->res->ai_addrlen) < 0)
 			print_error("Error: sendto failed\n");
