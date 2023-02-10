@@ -6,7 +6,7 @@
 /*   By: alilin <alilin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/12 17:13:20 by alilin            #+#    #+#             */
-/*   Updated: 2023/02/09 17:59:47 by alilin           ###   ########.fr       */
+/*   Updated: 2023/02/10 12:52:33 by alilin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,16 +39,23 @@ void	disp_stats(t_ping_env *env)
     loss = env->sent_pkt_count - env->received_pkt_count;
 	loss /= env->sent_pkt_count;
 	loss *= 100;
-	avg = env->avg / env->received_pkt_count;
 	if (env->received_pkt_count != 0)
 	{
-		for (int i = 0; env->rttbuf[i] != -1; i++)
+		avg = env->avg / env->received_pkt_count;
+		if (env->received_pkt_count != 0)
 		{
-			mdev += fabsl(env->rttbuf[i] - avg);
+			for (int i = 0; env->rttbuf[i] != -1; i++)
+			{
+				mdev += fabsl(env->rttbuf[i] - avg);
+			}
+			mdev /= env->received_pkt_count;
 		}
-		mdev /= env->received_pkt_count;
+		printf("%d/%d packets, %.0Lf%% loss, min/avg/mdev/max = %.3Lf/%.3Lf/%.3Lf/%.3Lf ms\n", env->received_pkt_count, env->sent_pkt_count, loss, env->min, avg, mdev, env->max);
 	}
-	printf("%d/%d packets, %.0Lf%% loss, min/avg/mdev/max = %.3Lf/%.3Lf/%.3Lf/%.3Lf ms\n", env->received_pkt_count, env->sent_pkt_count, loss, env->min, avg, mdev, env->max);
+	else
+	{
+		printf("%d/%d packets, %.0Lf%% loss\n", env->received_pkt_count, env->sent_pkt_count);
+	}
 }
 
 void    get_statistic(t_ping_env *env)
