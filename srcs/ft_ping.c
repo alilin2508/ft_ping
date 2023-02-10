@@ -6,7 +6,7 @@
 /*   By: alilin <alilin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/07 12:54:59 by alilin            #+#    #+#             */
-/*   Updated: 2023/02/10 16:05:31 by alilin           ###   ########.fr       */
+/*   Updated: 2023/02/10 16:07:57 by alilin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -137,14 +137,7 @@ int	main(int ac, char  **av) {
 	};
 	option = ft_getopt(av, options);
 	ft_handleopt(&opt, option);
-	if (option)
-	{
-		for (int i = 0; i < ft_tablen(option): i++)
-		{
-			free(option[i]);
-		}
-		free(option);
-	}
+	free(option);
 	signal(SIGINT, sig_handler);
 	signal(SIGQUIT, sig_handler);
 	init_params(&env);
