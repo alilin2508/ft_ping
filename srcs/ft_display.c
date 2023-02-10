@@ -6,7 +6,7 @@
 /*   By: alilin <alilin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/12 17:13:20 by alilin            #+#    #+#             */
-/*   Updated: 2023/02/10 12:52:33 by alilin           ###   ########.fr       */
+/*   Updated: 2023/02/10 12:54:01 by alilin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ void	disp_stats(t_ping_env *env)
 	}
 	else
 	{
-		printf("%d/%d packets, %.0Lf%% loss\n", env->received_pkt_count, env->sent_pkt_count);
+		printf("%d/%d packets, %.0Lf%% loss\n", env->received_pkt_count, env->sent_pkt_count, loss);
 	}
 }
 
