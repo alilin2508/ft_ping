@@ -6,7 +6,7 @@
 /*   By: alilin <alilin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/07 12:55:07 by alilin            #+#    #+#             */
-/*   Updated: 2023/02/10 16:17:22 by alilin           ###   ########.fr       */
+/*   Updated: 2023/02/10 16:23:58 by alilin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,9 @@ char	*ft_getopt(char **av, char **options) {
 							option = tmp;
 						}
 						else
+						{
 							option = ft_strdup(options[k]);
+						}
 						flag = true;
 					}
 				}
