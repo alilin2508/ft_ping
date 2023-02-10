@@ -6,7 +6,7 @@
 /*   By: alilin <alilin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/07 12:55:07 by alilin            #+#    #+#             */
-/*   Updated: 2023/01/23 19:25:40 by alilin           ###   ########.fr       */
+/*   Updated: 2023/02/10 16:15:34 by alilin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ char	*ft_getopt(char **av, char **options) {
 	int		j;
 	bool		flag;
 	char		*option;
+	char		*tmp;
     
 	i = 1;
 	flag = false;
@@ -42,7 +43,9 @@ char	*ft_getopt(char **av, char **options) {
 					else if (!ft_strncmp(&av[i][j], options[k], ft_strlen(options[k]))) // here we find a valid option
 					{
 						if (option != NULL)
-							option = ft_strjoin(option, options[k]);
+							tmp = ft_strjoin(option, options[k]);
+							free(option);
+							option = tmp;
 						else
 							option = ft_strdup(options[k]);
 						flag = true;
